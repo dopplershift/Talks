@@ -7,15 +7,22 @@
 \usepackage{textcomp}
 \usepackage{lmodern}
 
-\usetheme{CambridgeUS}
+%\usetheme{boxes}
+%\usetheme{Darmstadt}
+\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Ilmenau}
+%\usetheme{Madrid}
+%\usetheme{Warsaw}
 
-%\title[Porting Radar Simulation Software]{Porting Radar Simulation Software to Python}
-\title[Porting Radar DRAFT \today]{Porting Radar Simulation Software to Python}
+\title[Porting Radar Simulation Software DRAFT (\today)]
+{Porting Radar Simulation Software to Python}
 \subtitle{A Case Study in the Benefits of Python}
 \author{Ryan May}
-\institute[EEC]{Enterprise Electronics Corporation}
+\institute{Enterprise Electronics Corporation}
 \date{27 January 2011}
 \titlegraphic{\includegraphics[scale=0.17]{figures/title_ppi.png}}
+\logo{\includegraphics[scale=0.6]{figures/eec_logo_black.png}}
 
 %Python is known for having “batteries included”: a feature-filled standard
 %library which reduces development effort for many common tasks, such as logging,
@@ -117,7 +124,7 @@
 \begin{frame}
   \frametitle{Command Line Parser}
   \begin{itemize}
-    \item optparse and argparse (as of 2.7) available
+    \item optparse module included in Python standard library
     \item Handle parsing of commandline into passed in arguments and options
     \item EXAMPLE COMMANDLINE
     \item EXAMPLE COMPLEX COMMANDLINE
