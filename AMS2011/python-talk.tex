@@ -6,6 +6,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{lmodern}
+\usepackage{listings,bera}
+\usepackage{color}
 
 %\usetheme{boxes}
 %\usetheme{Darmstadt}
@@ -40,6 +42,33 @@
 %to Python.
 
 \begin{document}
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{60,179,113}
+\lstset{ %
+language=Python,                % choose the language of the code
+basicstyle=\scriptsize,         % the size of the fonts that are used for the code
+%numbers=left,                   % where to put the line-numbers
+%numberstyle=\scriptsize,        % the size of the fonts that are used for the line-numbers
+%stepnumber=1,                   % the step between two line-numbers. If it's 1 each line
+                                % will be numbered
+%numbersep=5pt,                  % how far the line-numbers are from the code
+backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,                   % adds a frame around the code
+tabsize=2,                      % sets default tabsize to 2 spaces
+captionpos=b,                   % sets the caption-position to bottom
+breaklines=true,                % sets automatic line breaking
+breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+title=\lstname,                 % show the filename of files included with \lstinputlisting;
+                                % also try caption instead of title
+escapeinside={\%*}{*)},         % if you want to add a comment within your code
+morekeywords={*,...}            % if you want to add more keywords to the set
+keywordstyle=\color{keywords},
+commentstyle=\color{comments}\emph
+}
 
 \frame{\titlepage}
 
@@ -81,9 +110,9 @@
 \begin{frame}
   \frametitle{Why is the Standard Library Important?}
   \begin{itemize}
-    \item Libraries you can count on with every installation -> minimal dependency headaches
-    \item Starting point for finding solid libraries to handle given tasks
-    \item Some examples
+    \item<1-> Libraries you can count on with every installation -> minimal dependency headaches
+    \item<2-> Starting point for finding solid libraries to handle given tasks
+    \item<3-> Some examples
       \begin{itemize}
         \item re - Regular Expressions
         \item bz2, zipfile, gzip - compressed file handling
@@ -91,11 +120,10 @@
         \item os.path - OS-independent path/file-name manipulation
         \item subprocess - Running other programs
         \item datetime - working with dates and times
-        \item ConfigParse - configuration file parsing
-        \item optparse - command-line option parsing
-        \item logging - controlling output
+        \item \alert<4->{ConfigParse} - configuration file parsing
+        \item \alert<4->{optparse} - command-line option parsing
+        \item \alert<4->{logging} - controlling output
       \end{itemize}
-    \item TODO: HIGHLIGHT LAST 3 ABOVE
   \end{itemize}
 \end{frame}
 
@@ -135,6 +163,27 @@
     \item Get a help display for free
     \item SHOW HELP SCREEN HERE
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Help Screen}
+\tiny
+\begin{verbatim}
+Usage: radarsim [options] configfiles
+
+Options:
+  --version             show program's version number and exit
+  -h, --help            show this help message and exit
+  -v, --verbose         Produce more verbose messages. Specify more than once
+                        for more messages.
+  -q, --quiet           Make output messages more quiet. Specify more than
+                        once for less output.
+  -d, --detailed        Use detailed logging messages.
+  -l FILE, --log-output=FILE
+                        Log output messages to FILE. Only error messages will
+                        be displayed to the console.
+  -L, --log-only        Used to specify that output only goes to logfile. Need
+                        to also specify --log-output.
+\end{verbatim}
 \end{frame}
 
 \begin{frame}
@@ -189,18 +238,51 @@
     \item Many packages:
     \begin{itemize}
       \item PyNIO - Part of NCAR's PyNGL package
-      \item Scientific.IO.NetCDF (?)
-      \item Pupynere
-      \item NetCDF4
+      \item Scientific.IO.NetCDF
+      \item pupynere (scipy.io.netcdf)
+      \item python-netcdf4
     \end{itemize}
     \item But they all pretty much follow the same API
     \item Which is \emph{much} simpler than reading and writing NetCDF in C
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Comparison: Reading a variable}
-  TODO: Need code samples from C and Python for reading a variable (without error handling)
+\begin{frame}[fragile]{Comparison: Reading a variable}
+  \lstset{language=Python}
+  \begin{lstlisting}
+  from pupynere import netcdf_file
+  nc = netcdf_file('test.nc', 'w')
+  nc.createDimension('radials', 10)
+
+  az_var = nc.createVariable('Azimuth', 'i', ('radials',))
+  az_var.units = 'degrees'
+  az_var[:] = range(10)
+
+  nc.close()
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Comparison: Reading a variable}
+  \lstset{language=C}
+  \begin{lstlisting}
+    int ncid;
+    int radials_dim;
+    int Azimuth_id;
+    int Azimuth_dims[1];
+
+    nc_create("test.nc", NC_CLOBBER, &ncid);
+    nc_def_dim(ncid, "radials", 10, &radials_dim);
+
+    Azimuth_dims[0] = radials_dim;
+    nc_def_var(ncid, "Azimuth", NC_INT, 1, Azimuth_dims, &Azimuth_id);
+    nc_put_att_text(ncid, Azimuth_id, "units", 7, "degrees");
+    nc_enddef(ncid);
+
+    int Azimuth_data[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} ;
+    nc_put_var_int(ncid, Azimuth_id, Azimuth_data);
+    nc_close(ncid);
+    return 0;
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}
@@ -223,11 +305,10 @@
 \stepcounter{subsection}
 \begin{frame}
   \begin{itemize}
-    \item Ctypes - wrap existing library objects (dll's on Windows, .so's on UNIX)
-    \item F2Py - call fortran functions from Python
-    \item Cython - Generate C-code (and compiled library) from Python-like syntax
+    \item<1-> \alert<2->{Ctypes} - wrap existing library objects (dll's on Windows, .so's on UNIX)
+    \item<1-> \alert<2->{F2Py} - call fortran functions from Python
+    \item<1-> Cython - Generate C-code (and compiled library) from Python-like syntax
   \end{itemize}
-  TODO: HIGHLIGHT Ctypes and F2Py above?
 \end{frame}
 
 \begin{frame}
@@ -240,7 +321,7 @@
 
 \section{Wrapping up}
 \stepcounter{subsection}
-\begin{frame}
+\begin{frame}[<+->]
   \frametitle{Concluding remarks}
   \begin{itemize}
     \item Python offers many built-in libraries that can simplify development...
@@ -248,14 +329,21 @@
     \item Python can \emph{drastically} simplify working with NetCDF files
     \item Python allows you keep your performance sensitive code while giving you
       flexibility for those parts that don't need speed (usually most of your code)
-    \item Python reduces development time for many things--at a cost of run-time
+    \item Python is \emph{not} necessarily enabling any functionality that could not be done in C or FORTRAN...
+    \item but it makes things easier, which allows you to do more.
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Thanks and Questions}
   Thanks to:
-  INSERT NUMPY, MATPLOTLIB, PYTHON, SCIPY here
+  \begin{description}[Matplotlib]
+    \item[Python]{http://www.python.org}
+    \item[NumPy]{http://numpy.scipy.org}
+    \item[SciPy]{http://www.scipy.org}
+    \item[Matplotlib]{http://matplotlib.sourceforge.net}
+    \item[pupynere]{http://pypi.python.org/pypi/pupynere}
+  \end{description}
   Questions?
 \end{frame}
 
