@@ -1,0 +1,11 @@
+[Scan]
+    # Scan is made up of a set of sweeps
+    [[Sweep1]]
+    AzAngles = 200, 345 #Degrees
+    ElAngles = 0.5 #Degrees
+    PRT = 0.00098667 #Seconds
+    PulseLength = 0.00000157 #Length of pulse in seconds
+    RotationRate = 19.2261 #Antenna rot. rate in deg. per sec.
+    NumPulses = 52 #Number of pulses per radial of data
+    GateLength = 250 #Length of a gate in meters
+

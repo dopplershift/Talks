@@ -44,16 +44,16 @@
 \begin{document}
 
 \definecolor{keywords}{RGB}{255,0,90}
-\definecolor{comments}{RGB}{60,179,113}
+\definecolor{comments}{RGB}{29,147,48}
 \lstset{ %
 language=Python,                % choose the language of the code
-basicstyle=\scriptsize,         % the size of the fonts that are used for the code
+basicstyle=\ttfamily\scriptsize, % the size of the fonts that are used for the code
 %numbers=left,                   % where to put the line-numbers
 %numberstyle=\scriptsize,        % the size of the fonts that are used for the line-numbers
 %stepnumber=1,                   % the step between two line-numbers. If it's 1 each line
                                 % will be numbered
 %numbersep=5pt,                  % how far the line-numbers are from the code
-backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+backgroundcolor=\color{white},   % choose the background color. You must add \usepackage{color}
 showspaces=false,               % show spaces adding particular underscores
 showstringspaces=false,         % underline spaces within strings
 showtabs=false,                 % show tabs within strings adding particular underscores
@@ -79,29 +79,34 @@ commentstyle=\color{comments}\emph
 
 \section{Background}
 \stepcounter{subsection}
-\begin{frame}
+\begin{frame}[<+->]
   \frametitle{Simulation Software}
   \begin{itemize}
     \item Software simulates radar data from numerical simulation output
     \item Radar data simulated based on configured radar and scanning strategy parameters
     \item Computationally expensive simulation
-    \item Desire to utilize as a teaching tool -> EEK! Other USERS!
+    \item Desire to utilize as a teaching tool...
+    \item ...which implied a need to improve the usability
     \item Before: 5400 LOC C
     \item Now: 2000 LOC Python, 2900 LOC C (+8500 LOC FORTRAN Library)
     \item Time to "python-ize": ~3 months for a single graduate student (me)
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[<+->]
   \frametitle{Why I Chose Python}
   \begin{itemize}
-    \item Simple Syntax
-    \item Powerful built-in data structures
-    \item Excellent string manipulation
-    \item Strong built-in library
-    \item NumPy - array math
-    \item SciPy - scientific algorithms
-    \item Matplotlib - plotting
+    \item Had already begun utilizing Python (+ Numpy, Scipy, Matplotlib) in lieu of MATLAB
+        for many analysis tasks.
+    \item Needed to develop further and leveraged Python to improve rate of development:
+    \begin{itemize}
+      \item<3-> Improve command line usability \only<4->{\alert<4>{[optparse]}}
+      \item<3-> Vastly improve configuration files \only<5->{\alert<5>{[ConfigParse]}}
+      \item<3-> Keep debugging output but hide from users \only<6->{\alert<6>{[logging]}}
+      \item<3-> Update the NetCDF code with more output \only<7->{\alert<7>{[pupynere]}}
+      \item<3-> Improve scatter calculation code \only<8->{\alert<8>{[existing python code]}}
+      \item<3-> Leverage highly optimized computing code \only<9->{\alert<9>{[ctypes]}}
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -112,17 +117,17 @@ commentstyle=\color{comments}\emph
   \begin{itemize}
     \item<1-> Libraries you can count on with every installation -> minimal dependency headaches
     \item<2-> Starting point for finding solid libraries to handle given tasks
-    \item<3-> Some examples
+    \item<3-> Ones used in this code:
       \begin{itemize}
-        \item re - Regular Expressions
-        \item bz2, zipfile, gzip - compressed file handling
-        \item os - OS-independent ways for working with files
+        \item collections, itertools - collecting and looping over items
+        \item math - mathematical functions
+        \item warnings - issuing and supressing warnings
         \item os.path - OS-independent path/file-name manipulation
-        \item subprocess - Running other programs
-        \item datetime - working with dates and times
+        \item datetime, time, calendar - working with dates and times
         \item \alert<4->{ConfigParse} - configuration file parsing
         \item \alert<4->{optparse} - command-line option parsing
         \item \alert<4->{logging} - controlling output
+        \item \alert<4->{ctypes} - calling into libraries
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -132,36 +137,36 @@ commentstyle=\color{comments}\emph
   \begin{itemize}
     \item The radar simulation software makes use of configuration files to
       control various radar operation parameters
+    \item Old format read values from a file in fixed order (Text present for user but ignored)
     \item Made use of ConfigParse module from the standard library
     \item Provides flexible configuration files with support for sections and comments
     \item Simple API to open a configuration file and begin reading options
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{<+->}
   \frametitle{Configuration Files:Impacts}
   \begin{itemize}
-    \item Replaced brittle file format with something that is easy for users to understand
-    \item OLD FORMAT HERE
-    \item NEW FORMAT HERE
-    \item Replaced brittle, unmaintainable code with something much easier to enhance
-    \item Shrank code by 600 LOC
+    \only<1> { \lstinputlisting[caption=]{oldconfig} }
+    \only<2> { \lstinputlisting[caption=]{newconfig} }
+    \item<3-> Replaced brittle file format with something that is easy for users to understand
+    \item<4-> Replaced brittle, unmaintainable code with something much easier to enhance
+    \item<5-> Shrank code by 600 LOC
   \end{itemize}
-  HUGE usability improvment.
+  \uncover<6>{HUGE usability improvment.}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[<+->][fragile]
+  \lstset{language=Python}
   \frametitle{Command Line Parser}
   \begin{itemize}
     \item optparse module included in Python standard library
-    \item Handle parsing of commandline into passed in arguments and options
-    \item EXAMPLE COMMANDLINE
-    \item EXAMPLE COMPLEX COMMANDLINE
+    \item Handle parsing of commandline into passed in arguments and options:
+      \verb$radarsim -vvv -d -l run.log config/example.config$
     \item Programmatically add individual options
-    \item EXAMPLE CODE HERE
+    \lstinputlisting[caption=]{optparse.py}
     \item Can also set default values for options
     \item Get a help display for free
-    \item SHOW HELP SCREEN HERE
   \end{itemize}
 \end{frame}
 
@@ -214,7 +219,7 @@ Options:
     \begin{itemize}
       \item Control of message information (time, filename, line number, etc.)
       \item Different message commands for different levels (warning, info, debug, etc.)
-      \item Different message handlers (write to file, write to screen, email?)
+      \item Different message handlers (file, screen, email?)
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -248,21 +253,6 @@ Options:
 \end{frame}
 
 \begin{frame}[fragile]{Comparison: Reading a variable}
-  \lstset{language=Python}
-  \begin{lstlisting}
-  from pupynere import netcdf_file
-  nc = netcdf_file('test.nc', 'w')
-  nc.createDimension('radials', 10)
-
-  az_var = nc.createVariable('Azimuth', 'i', ('radials',))
-  az_var.units = 'degrees'
-  az_var[:] = range(10)
-
-  nc.close()
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Comparison: Reading a variable}
   \lstset{language=C}
   \begin{lstlisting}
     int ncid;
@@ -284,16 +274,26 @@ Options:
   \end{lstlisting}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Comparison: Writing an attribute}
-  TODO: Need code samples from C and Python for writing a string attribute on the file (without error handling)
+\begin{frame}[fragile]{Comparison: Reading a variable}
+  \lstset{language=Python}
+  \begin{lstlisting}
+  from pupynere import netcdf_file
+  nc = netcdf_file('test.nc', 'w')
+  nc.createDimension('radials', 10)
+
+  az_var = nc.createVariable('Azimuth', 'i', ('radials',))
+  az_var.units = 'degrees'
+  az_var[:] = range(10)
+
+  nc.close()
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}
   \frametitle{Python NetCDF API: Impacts}
   \begin{itemize}
     \item Rewrote I/O layer -- shrank by 800 LOC
-    \item Better output metadata
+    \item Better output metadata (units, time of run, etc.)
     \item Adding new fields and attributes much simpler with Python
     \item As a consequence, the output files contain much more useful
       information for reproducing previous results
@@ -302,15 +302,15 @@ Options:
 
 \section[Modularity]{Modularity and Wrapping existing code}
 \stepcounter{subsection}
-\begin{frame}
+\begin{frame}{Wrapping existing code}
   \begin{itemize}
-    \item<1-> \alert<2->{Ctypes} - wrap existing library objects (dll's on Windows, .so's on UNIX)
+    \item<1-> \alert<2->{Ctypes} - wrap existing libraries
     \item<1-> \alert<2->{F2Py} - call fortran functions from Python
     \item<1-> Cython - Generate C-code (and compiled library) from Python-like syntax
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Modular Code Reuse}
   \begin{itemize}
     \item Integration of existing python scattering code
     \item Same code used to generate plots for other analyses
@@ -323,13 +323,11 @@ Options:
 \begin{frame}[<+->]
   \frametitle{Concluding remarks}
   \begin{itemize}
-    \item Python offers many built-in libraries that can simplify development...
-    \item or allow you to implement features you never would have tried
-    \item Python can \emph{drastically} simplify working with NetCDF files
-    \item Python allows you keep your performance sensitive code while giving you
-      flexibility for those parts that don't need speed (usually most of your code)
+    \item Python offers many built-in libraries that can simplify development
+    \item Python can \emph{drastically} simplified working with NetCDF files
+    \item Python permitted keeping performance-sensitive compiled codes
     \item Python is \emph{not} necessarily enabling any functionality that could not be done in C or FORTRAN...
-    \item but it makes things easier, which allows you to do more.
+    \item Python modules promote the use and \emph{reuse} of modular code
   \end{itemize}
 \end{frame}
 

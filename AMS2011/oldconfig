@@ -1,0 +1,12 @@
+NumSweeps 1
+Sweep1NumAz 2
+Sweep1AzAngle1 200
+Sweep1AzAngle2 345
+Sweep1NumEl 1
+Sweep1ElAngle1 0.5
+Sweep1PRT 0.00098667
+Sweep1PulseLength 0.00000157
+Sweep1RotationRate 19.2261
+Sweep1NumPulses 52
+Sweep1GateLength  250
+
