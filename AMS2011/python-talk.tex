@@ -67,7 +67,8 @@ title=\lstname,                 % show the filename of files included with \lsti
 escapeinside={\%*}{*)},         % if you want to add a comment within your code
 morekeywords={*,...}            % if you want to add more keywords to the set
 keywordstyle=\color{keywords},
-commentstyle=\color{comments}\emph
+commentstyle=\color{comments}\emph,
+linewidth=240pt
 }
 
 \frame{\titlepage}
@@ -98,7 +99,7 @@ commentstyle=\color{comments}\emph
   \begin{itemize}
     \item Had already begun utilizing Python (+ Numpy, Scipy, Matplotlib) in lieu of MATLAB
         for many analysis tasks.
-    \item Needed to develop further and leveraged Python to improve rate of development:
+    \item Needed to develop simulation code further and leveraged Python to improve rate of development:
     \begin{itemize}
       \item<3-> Improve command line usability \only<4->{\alert<4>{[optparse]}}
       \item<3-> Vastly improve configuration files \only<5->{\alert<5>{[ConfigParse]}}
@@ -137,7 +138,7 @@ commentstyle=\color{comments}\emph
   \begin{itemize}
     \item The radar simulation software makes use of configuration files to
       control various radar operation parameters
-    \item Old format read values from a file in fixed order (Text present for user but ignored)
+    \item Old format read values from a file in fixed order (Text field present for user but not parsed)
     \item Made use of ConfigParse module from the standard library
     \item Provides flexible configuration files with support for sections and comments
     \item Simple API to open a configuration file and begin reading options
@@ -156,13 +157,43 @@ commentstyle=\color{comments}\emph
   \uncover<6>{HUGE usability improvment.}
 \end{frame}
 
-\begin{frame}[<+->][fragile]
+\begin{frame}
+  \frametitle{Logging}
+  \begin{itemize}
+    \item Console messages are the way the program communicates with the user
+    \item However, the messages that are useful to a developer are not the
+      same as what other users needs to see
+    \item Logging libraries provide custom printing functions that allow fine-grained
+      control of what messages are printed
+    \item Python includes the {\bf logging} module that includes a raft of features:
+    \begin{itemize}
+      \item Control of message information (time, filename, line number, etc.)
+      \item Different message commands for different levels (warning, info, debug, etc.)
+      \item Different message handlers (file, screen, email?)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[<+->]
+  \frametitle{Logging:Impacts}
+  \begin{itemize}
+    \item Added 40 LOC to set up logging, replaced prints with logger.*
+    \item Can optionally get detailed messages with a simple command line flag
+    \item Can turn on some messages only when \emph{I} want them
+    \item Can tell messages to log to a file
+    \item No \#ifdefs or commenting/uncommenting prints
+    \item Big improvements in usability for me as a developer and for other users
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
   \lstset{language=Python}
   \frametitle{Command Line Parser}
   \begin{itemize}
     \item optparse module included in Python standard library
     \item Handle parsing of commandline into passed in arguments and options:
-      \verb$radarsim -vvv -d -l run.log config/example.config$
+
+    \verb$radarsim -vvv -d -l run.log config/example.config$
     \item Programmatically add individual options
     \lstinputlisting[caption=]{optparse.py}
     \item Can also set default values for options
@@ -198,41 +229,12 @@ Options:
     \item However, old code was simplistic
     \item Those 100 lines of new code added support for:
     \begin{itemize}
-      \item Controlling how many message are written to screen
-      \item Controlling detail of messages
-      \item Logging messages to file
+      \item Controlling message verbosity
+      \item Controlling other logger behavior
       \item Drastically improved help message
     \end{itemize}
   \end{itemize}
   Overall impact was a large increase in usability with minimal development effort.
-\end{frame}
-
-\begin{frame}
-  \frametitle{Logging}
-  \begin{itemize}
-    \item Printing messages to the console is necessary to keep tabs on the program.
-    \item However, the messages that are useful to me as a developer are not the
-      same as what other users needs to see.
-    \item Logging libraries provide custom printing functions that allow fine-grained
-      control of what messages are printed
-    \item Python includes the logging module that includes a raft of features:
-    \begin{itemize}
-      \item Control of message information (time, filename, line number, etc.)
-      \item Different message commands for different levels (warning, info, debug, etc.)
-      \item Different message handlers (file, screen, email?)
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Logging:Impacts}
-  \begin{itemize}
-    \item Added 40 LOC to set up logging, replaced prints with logger.*
-    \item Gained the ability to get detailed messages with a simple command line flag
-    \item Gained the ability to only turn on some messages when \emph{I} want them
-    \item No \#ifdefs or commenting/uncommenting prints
-    \item Big improvements in usability for me as a developer and for other users
-  \end{itemize}
 \end{frame}
 
 \section{NetCDF}
@@ -240,37 +242,37 @@ Options:
 \begin{frame}
   \frametitle{Python NetCDF API}
   \begin{itemize}
-    \item Many packages:
+    \item<1-> Many packages:
     \begin{itemize}
       \item PyNIO - Part of NCAR's PyNGL package
       \item Scientific.IO.NetCDF
-      \item pupynere (scipy.io.netcdf)
-      \item python-netcdf4
+      \item \alert<4> {pupynere (scipy.io.netcdf)}
+      \item netcdf4-python
     \end{itemize}
-    \item But they all pretty much follow the same API
-    \item Which is \emph{much} simpler than reading and writing NetCDF in C
+    \item<2-> But they all pretty much follow the same API
+    \item<3-> Which is \emph{much} simpler than reading and writing NetCDF in C
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Comparison: Reading a variable}
   \lstset{language=C}
   \begin{lstlisting}
-    int ncid;
-    int radials_dim;
-    int Azimuth_id;
-    int Azimuth_dims[1];
-
-    nc_create("test.nc", NC_CLOBBER, &ncid);
-    nc_def_dim(ncid, "radials", 10, &radials_dim);
-
-    Azimuth_dims[0] = radials_dim;
-    nc_def_var(ncid, "Azimuth", NC_INT, 1, Azimuth_dims, &Azimuth_id);
-    nc_put_att_text(ncid, Azimuth_id, "units", 7, "degrees");
-    nc_enddef(ncid);
-    int Azimuth_data[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} ;
-    nc_put_var_int(ncid, Azimuth_id, Azimuth_data);
-
-    nc_close(ncid);
+    int nc_file, var_id, ndims;
+    nc_open("Test_data.nc", NC_NOWRITE, &nc_file);
+    nc_inq_varid(nc_file, "Temperature", &var_id);
+    nc_inq_varndims(nc_file, var_id, &ndims);
+    int* dims = malloc(ndims * sizeof(int));
+    nc_inq_vardimid(nc_file, var_id, dims);
+    size_t dim_len, total_size = 1;
+    for(int i=0; i<ndims; ++i)
+    {
+        nc_inq_dimlen(nc_file, dims[i], &dim_len);
+        total_size *= dim_len;
+    }
+    float* var = malloc(total_size * sizeof(float));
+    nc_get_var_float(nc_file, var_id, var);
+    free(dims); free(var);
+    nc_close(nc_file);
   \end{lstlisting}
 \end{frame}
 
@@ -278,12 +280,11 @@ Options:
   \lstset{language=Python}
   \begin{lstlisting}
   from pupynere import netcdf_file
-  nc = netcdf_file('test.nc', 'w')
-  nc.createDimension('radials', 10)
+  nc = netcdf_file('Test_data.nc', 'r')
 
-  az_var = nc.createVariable('Azimuth', 'i', ('radials',))
-  az_var.units = 'degrees'
-  az_var[:] = range(10)
+  temp_var = nc.variables('Temperature')
+
+  print temp_var.units
 
   nc.close()
   \end{lstlisting}
@@ -294,7 +295,7 @@ Options:
   \begin{itemize}
     \item Rewrote I/O layer -- shrank by 800 LOC
     \item Better output metadata (units, time of run, etc.)
-    \item Adding new fields and attributes much simpler with Python
+    \item Adding new input and output fields/attributes much simpler with Python
     \item As a consequence, the output files contain much more useful
       information for reproducing previous results
   \end{itemize}
@@ -302,19 +303,26 @@ Options:
 
 \section[Modularity]{Modularity and Wrapping existing code}
 \stepcounter{subsection}
-\begin{frame}{Wrapping existing code}
+\begin{frame}{Wrapping code}
   \begin{itemize}
-    \item<1-> \alert<2->{Ctypes} - wrap existing libraries
-    \item<1-> \alert<2->{F2Py} - call fortran functions from Python
-    \item<1-> Cython - Generate C-code (and compiled library) from Python-like syntax
+    \item<1-> \alert<4->{Ctypes} - wrap existing libraries
+    \begin{itemize}
+        \item Can express C structures in a python syntax
+        \item Dynamically grab function names and specify calling types
+        \item Can use pointer types to pass numpy arrays
+    \end{itemize}
+    \item<2-> \alert<4->{F2Py} - wrap and call fortran code from Python
+    \item<3-> Cython - Generate C-code (and compiled library) from Python-like syntax
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Modular Code Reuse}
+\begin{frame}[<+->]{Modular Code Reuse}
   \begin{itemize}
-    \item Integration of existing python scattering code
-    \item Same code used to generate plots for other analyses
-    \item Re-use leads to better testing
+    \item Needed T-Matrix calculations -> F77 Code
+    \item Wrapped with F2Py to give a nice numpy interface for scattering calculations
+    \item Used initially just for quick analyses of scattering effects
+    \item Was able to re-use this module (which lives as a separate project)
+    \item Re-use leads to better testing and fixing as opposed to separate code bases
   \end{itemize}
 \end{frame}
 
@@ -322,12 +330,14 @@ Options:
 \stepcounter{subsection}
 \begin{frame}[<+->]
   \frametitle{Concluding remarks}
+  Python:
   \begin{itemize}
-    \item Python offers many built-in libraries that can simplify development
-    \item Python can \emph{drastically} simplified working with NetCDF files
-    \item Python permitted keeping performance-sensitive compiled codes
-    \item Python is \emph{not} necessarily enabling any functionality that could not be done in C or FORTRAN...
-    \item Python modules promote the use and \emph{reuse} of modular code
+    \item Offers many built-in libraries that can simplify development
+    \item Can \emph{drastically} simplify working with NetCDF files
+    \item Permits keeping performance-sensitive compiled codes
+    \item Promotes through its module system the use and \emph{reuse} of modular code
+    \item is \emph{not} necessarily enabling any functionality that could not be done in C or FORTRAN...
+    \item ...but makes it much easier
   \end{itemize}
 \end{frame}
 
