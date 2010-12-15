@@ -4,9 +4,9 @@
 \usepackage{textcomp}
 \usepackage{lmodern}
 \usepackage{listings,bera}
-\usepackage{color}
 \usepackage{authblk}
 \usepackage{times}
+\usepackage{color}
 
 \setlength{\affilsep}{0.2em}
 \title{Porting Radar Simulation Software to Python: A Case Study in the Benefits of Python}
@@ -32,8 +32,6 @@
 \begin{document}
 \maketitle
 
-\definecolor{keywords}{RGB}{255,0,90}
-\definecolor{comments}{RGB}{29,147,48}
 \lstset{ %
 language=Python,                % choose the language of the code
 basicstyle=\ttfamily\scriptsize, % the size of the fonts that are used for the code
@@ -50,14 +48,14 @@ frame=single,                   % adds a frame around the code
 tabsize=2,                      % sets default tabsize to 2 spaces
 captionpos=b,                   % sets the caption-position to bottom
 breaklines=true,                % sets automatic line breaking
-breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+breakatwhitespace=true,        % sets if automatic breaks should only happen at whitespace
 title=\lstname,                 % show the filename of files included with \lstinputlisting;
                                 % also try caption instead of title
 escapeinside={\%*}{*)},         % if you want to add a comment within your code
 morekeywords={*,...}            % if you want to add more keywords to the set
-keywordstyle=\color{keywords},
-commentstyle=\color{comments}\emph,
-linewidth=240pt
+keywordstyle=\textbf,
+commentstyle=\emph,
+linewidth=220pt
 }
 
 
@@ -77,7 +75,7 @@ radar simulation software package from C to Python.  Various Python modules used
 porting process and their impacts on the size, and more imporantly, functionality, of the
 code base will be discussed.
 
-\section{Background}
+\section{Simulation Software}
 The software under study here is a package for simulating weather radar data using
 numerical simulation output as the source for the atmosphere being simulated. In addition,
 the simulator relies on a set of configuration data to control the radar hardware
@@ -117,7 +115,7 @@ contains the ctypes module, which served as a straightforward (and included) way
 to join the new Python front-end to the C-based backend.
 
 
-\section{Standard Library}
+\section{Python Standard Library}
 In addition to language syntax and features that enable rapid development, part of 
 rapid development comes from Python's feature-filled standard library. This leads
 many Python developers to refer to Python as having "batteries included." The standard
@@ -158,8 +156,8 @@ standard library modules for: command line parsing, configuration files, and mes
     \item Simple API to open a configuration file and begin reading options
   \end{itemize}
 
-  \lstinputlisting{oldconfig}
-  \lstinputlisting{newconfig}
+  \lstinputlisting[title=Old Configuration Format]{oldconfig}
+  \lstinputlisting[title=New Configuration Format]{newconfig}
   \begin{itemize}
     \item Replaced brittle file format with something that is easy for users to understand
     \item Replaced brittle, unmaintainable code with something much easier to enhance
@@ -191,13 +189,13 @@ standard library modules for: command line parsing, configuration files, and mes
     \item Big improvements in usability for me as a developer and for other users
   \end{itemize}
 
-\subsection{Command Line Parser}
+\subsection{Command Line Parsing}
   \lstset{language=Python}
   \begin{itemize}
     \item optparse module included in Python standard library
     \item Handle parsing of commandline into passed in arguments and options:
 
-    \verb$radarsim -vvv -d -l run.log config/example.config$
+    {\scriptsize\verb$radarsim -vvv -d -l run.log config/example.config$}
     \item Programmatically add individual options
     \lstinputlisting[caption=]{optparse.py}
     \item Can also set default values for options
