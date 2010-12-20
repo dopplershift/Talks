@@ -124,84 +124,139 @@ running external processes, working files and paths, regular expressions, etc. I
 to the benefit as a starting point, which should not be underestimated, the standard
 library reduces complications from software dependencies. The modules in the standard
 library can be relied upon to be present and don't need to be tested for and suggested
-for installation if necessary. In this work, we examine specifically the use of
-standard library modules for: command line parsing, configuration files, and message logging.
+for installation if necessary. Some of the modules used in the code include:
 
+\begin{itemize}
+    \item collections - item collections
+    \item itertools - iterating over groups of items
+    \item math - mathematical functions
+    \item warnings - issuing and supressing warnings
+    \item os.path - path/file-name manipulation
+    \item datetime, time, calendar - dates and times
+    \item ConfigParse - configuration file parsing
+    \item optparse - command-line option parsing
+    \item logging - controlling output
+    \item ctypes - calling into dll/.so libraries
+\end{itemize}
 
-\subsection{Why is the Standard Library Important?}
-  \begin{itemize}
-    \item Libraries you can count on with every installation -> minimal dependency headaches
-    \item Starting point for finding solid libraries to handle given tasks
-    \item Ones used in this code:
-      \begin{itemize}
-        \item collections, itertools - collecting and looping over items
-        \item math - mathematical functions
-        \item warnings - issuing and supressing warnings
-        \item os.path - OS-independent path/file-name manipulation
-        \item datetime, time, calendar - working with dates and times
-        \item ConfigParse - configuration file parsing
-        \item optparse - command-line option parsing
-        \item logging - controlling output
-        \item ctypes - calling into libraries
-      \end{itemize}
-  \end{itemize}
+In this work, we examine specifically the use of standard library modules for:
+command line parsing, configuration files, and message logging.
 
 \subsection{Configuration Files}
-  \begin{itemize}
-    \item The radar simulation software makes use of configuration files to
-      control various radar operation parameters
-    \item Old format read values from a file in fixed order (Text field present for user but not parsed)
-    \item Made use of ConfigParse module from the standard library
-    \item Provides flexible configuration files with support for sections and comments
-    \item Simple API to open a configuration file and begin reading options
-  \end{itemize}
+One of the most significant upgrades required to improve the program's usability
+was to improve the configuration file format. An example section from the original
+format is given below:
 
   \lstinputlisting[title=Old Configuration Format]{oldconfig}
-  \lstinputlisting[title=New Configuration Format]{newconfig}
-  \begin{itemize}
-    \item Replaced brittle file format with something that is easy for users to understand
-    \item Replaced brittle, unmaintainable code with something much easier to enhance
-    \item Shrank code by 600 LOC
-  \end{itemize}
-  HUGE usability improvment.
 
-\subsection{Logging}
-  \begin{itemize}
-    \item Console messages are the way the program communicates with the user
-    \item However, the messages that are useful to a developer are not the
-      same as what other users needs to see
-    \item Logging libraries provide custom printing functions that allow fine-grained
-      control of what messages are printed
-    \item Python includes the {\bf logging} module that includes a raft of features:
-    \begin{itemize}
-      \item Control of message information (time, filename, line number, etc.)
-      \item Different message commands for different levels (warning, info, debug, etc.)
-      \item Different message handlers (file, screen, email?)
-    \end{itemize}
-  \end{itemize}
+While the format is not too difficult to understand at first glance, it is
+somewhat deceptive. Each line is made up of a string with a value. While the
+string indicates to the user what the value represents, these strings are not
+recognized by the program at all--the lines were simply read in a fixed order.
+This is a very unfriendly format for new users, and prone to inducing errors
+when new files are created. Additionally, it was impossible to have any
+comments in the file to help explain values and units.
 
-  \begin{itemize}
-    \item Added 40 LOC to set up logging, replaced prints with logger.*
-    \item Can optionally get detailed messages with a simple command line flag
-    \item Can turn on some messages only when \emph{I} want them
-    \item Can tell messages to log to a file
-    \item No \#ifdefs or commenting/uncommenting prints
-    \item Big improvements in usability for me as a developer and for other users
-  \end{itemize}
+When porting to Python, the standard library's ConfigParse module was selected.
+This module provides simple and flexible parsing of configuration files. 
+A sample of the new configuration file format is given below:
+
+\lstinputlisting[title=New Configuration Format]{newconfig}
+
+The new format is much more flexible, allowing for comments as well as having
+no fixed order for the different entries. Additionally, the configuration file
+can be broken into separate sections, which can be helpful to organize the file
+as well as for the programmer to keep the configuration compartmentalized. From
+a programmer's standpoint, the use of ConfigParse yields much simpler and 
+maintainable code. The actual parsing of strings into values is offloaded to
+the library, so that one only needs to request certain parameters by name.
+Also, the library supports parsing a flexible (i.e. unknown) number of values
+as a single parameter, which was not possible with the old format.
+
+The end result of the conversion of the configuration parsing code from plain C
+to using Python's ConfigParse module was a reduction of 600 LOC. While the loss
+in code size represents a sure gain in code maintainability (fewer lines gives
+fewer opportunities for bugs), the new code itself is structured much better
+for maintainance. Adding support for new paramters is as simple as just looking
+up the new parameter name (having a sensible default if it is unfound). Unspecified
+parameters using a default would have been exceedingly difficult, if not impossible,
+using the old C-based code. All of these gains together represent a large gain
+in program usability.
+
+\subsection{Message Logging}
+A second change needed to improve the simulator's usability was to improve the
+users that were displayed to the user.  As a large research code base under heavy
+development, the original code displayed a great deal of output to the console.
+Such messages would be distracting and/or confusing to the user. The messages
+provided useful debugging information, however, so simply removing the messages
+was not an option. What was needed was a way to turn on the messages when desired
+but have them off by default.
+
+Python provides the logging module in the standard library, which serves the
+purpose of logging messages. The full framework provides a way of controlling
+message formatting, messages at different levels (warn, error, debug, etc.), and
+controlling where messages are sent. Much of the complete functionality was
+considered overkill for the application here. However, a simple application of
+the library allows uses the message levels to specify messages as either
+debugging, information, or errors. These messages are then either sent to the
+screen (by default) or to a log file.
+
+The inclusion of logging messages to a file allows the user to easily collect
+a log of the debugging messages, which could be submitted as feedback in the
+event of a problem. This streamlines the process of trying to fix issues that
+inevitably arise as code gets used more wisely under configurations that have
+not been tested.
+
+The total changes in the code base were a gain of 40 lines of Python code.
+Additionally, all of the print statements in the code ported to Python became
+calls to logging functions. For such a small gain in the code base, useful
+features for controlling and saving messages were gained, as well as putting
+more polish on the user-visible face of the program.
 
 \subsection{Command Line Parsing}
-  \lstset{language=Python}
-  \begin{itemize}
-    \item optparse module included in Python standard library
-    \item Handle parsing of commandline into passed in arguments and options:
+Besides the configuration file, the command line represents the only user
+interface with the simulator. While the original command line interface
+worked fine for the original feature set of the program, new options
+were required to support the logging module.  Also, the original help screen
+represented essentially a text file embedded into the source. Any changes to
+the interface required a separate update to reflect new options in the text.
 
-    {\scriptsize\verb$radarsim -vvv -d -l run.log config/example.config$}
-    \item Programmatically add individual options
-    \lstinputlisting[caption=]{optparse.py}
-    \item Can also set default values for options
-    \item Get a help display for free
-  \end{itemize}
+While the Python standard library's optparse module did not motivate the port
+to Python, once the port was underway, it was an clear choice for implementing
+command line parsing. optparse provides a clear advantage in terms of creating
+code that can easily extended to support new options.  Each option is specified
+individually, giving:
+\begin{itemize}
+    \item long and short command names
+    \item optional default values
+    \item a description of the command (for the program's help message)
+    \item what the parser should do when the option is encountered, such as
+    \begin{itemize}
+        \item Store the subsequent string (such as a filename)
+        \item Store true/false
+        \item Increment a counter
+        \item Run a function
+    \end{itemize}
+\end{itemize}
+From the descriptions of each individual option, the library generates a
+help screen for the program, which can be displayed by invoking the program
+with the '-h' option or any other case the programmer wishes.
 
+A typical invocation of the program from the command line, which looks like
+any typical Linux/UNIX program is:
+
+{\scriptsize\verb$radarsim -vvv -d -l run.log config/example.config$}
+
+The code used to parse this looks like:
+
+\lstset{language=Python}
+\lstinputlisting[caption=]{optparse-large.py}
+
+The use of this module increased the size of the code by 10 lines. This does
+not include the old hard-coded help page. This additional code added options
+for the logging framework that were not available in the old code, as well
+as provides a generated, UNIX-like help screen. An example of the help screen
+is given below:
 
 {\tiny
 \begin{verbatim}
@@ -222,20 +277,13 @@ Options:
                         to also specify --log-output.
 \end{verbatim}}
 
-\subsection{Command Line Parser:Impacts}
-  \begin{itemize}
-    \item Increased code by 100 LOC
-    \item However, old code was simplistic
-    \item Those 100 lines of new code added support for:
-    \begin{itemize}
-      \item Controlling message verbosity
-      \item Controlling other logger behavior
-      \item Drastically improved help message
-    \end{itemize}
-  \end{itemize}
-  Overall impact was a large increase in usability with minimal development effort.
+All of these changes required minimal development effort. It should be noted
+that as of Python's 2.7 release, the optprase library has been deprecated in
+favor of the argparse module. This module provides a very similar interface
+in many respects, but improves handling of required arguments and default
+parameter values. \citep{REFERENCE!}
 
-
+\section{NetCDF}
 In addition to the utility of the standard library, the syntax and features of Python
 permit library developers to create more expressive interfaces than would be possible
 in may other languages. Much of this stems from Python's dynamic nature.
@@ -251,28 +299,32 @@ leads to the creation of large amount of code (functions, data structures, etc.)
 the possible cases.  A dynamic language lends itself much more readily to such a flexible-typed
 file format, and this shows in the difference in interfaces.
 
+There exist many Python libraries for reading NetCDF files:
+\begin{itemize}
+  \item ScientificPython (Scientific.IO.NetCDF)
+  \item PyNIO
+  \item pupynere
+  \item scipy.io.netcdf
+  \item netcdf4-python
+\end{itemize}
+The interface for all of these libraries is practically identical; ScientificPython's
+was the first and the other's followed the same interface since it proved so
+simple to use.
 
-\section{NetCDF}
-  \begin{itemize}
-    \item Many packages:
-    \begin{itemize}
-      \item PyNIO - Part of NCAR's PyNGL package
-      \item Scientific.IO.NetCDF
-      \item pupynere (scipy.io.netcdf)
-      \item netcdf4-python
-    \end{itemize}
-    \item But they all pretty much follow the same API
-    \item Which is \emph{much} simpler than reading and writing NetCDF in C
-  \end{itemize}
+As an exmple of the verbosity in reading an NetCDF file in C, see the listing
+below, which retrieves an array of values corresponding to the "Temperature"
+variable:
 
   \lstset{language=C}
   \begin{lstlisting}
     int nc_file, var_id, ndims;
     nc_open("Test_data.nc", NC_NOWRITE, &nc_file);
+
     nc_inq_varid(nc_file, "Temperature", &var_id);
     nc_inq_varndims(nc_file, var_id, &ndims);
     int* dims = malloc(ndims * sizeof(int));
     nc_inq_vardimid(nc_file, var_id, dims);
+
     size_t dim_len, total_size = 1;
     for(int i=0; i<ndims; ++i)
     {
@@ -281,10 +333,12 @@ file format, and this shows in the difference in interfaces.
     }
     float* var = malloc(total_size * sizeof(float));
     nc_get_var_float(nc_file, var_id, var);
-    free(dims); free(var);
+ 
+    free(dims);
+    free(var);
     nc_close(nc_file);
   \end{lstlisting}
-
+This stands in stark contrast to the equivalent Python code using pupynere:
   \lstset{language=Python}
   \begin{lstlisting}
   from pupynere import netcdf_file
@@ -292,51 +346,90 @@ file format, and this shows in the difference in interfaces.
 
   temp_var = nc.variables('Temperature')
 
-  print temp_var.units
-
   nc.close()
   \end{lstlisting}
+In the C version of the code, after looking up an ID using the variable's name,
+a lot of code is spent figuring out how much memory to allocate to hold the
+array.  All of this work is hidden behind a single function call in Python.
 
-\subsection{Python NetCDF API: Impacts}
-  \begin{itemize}
-    \item Rewrote I/O layer -- shrank by 800 LOC
-    \item Better output metadata (units, time of run, etc.)
-    \item Adding new input and output fields/attributes much simpler with Python
-    \item As a consequence, the output files contain much more useful
-      information for reproducing previous results
-  \end{itemize}
+Another interesting contrast between the two versions is that to read a different
+data type (say Temperature stored as integers), the C version would need to be
+updated; the Python version would look identical to the version above. In order
+to make a C version that would have the same flexibility, many more lines of
+code would be need to check types and to allocate a pointer of the appropriate
+type.
 
-\section{Modularity and Wrapping existing code}
-\subsection{Wrapping code}
-  \begin{itemize}
-    \item Ctypes - wrap existing libraries
-    \begin{itemize}
-        \item Can express C structures in a python syntax
-        \item Dynamically grab function names and specify calling types
-        \item Can use pointer types to pass numpy arrays
-    \end{itemize}
-    \item F2Py - wrap and call fortran code from Python
-    \item Cython - Generate C-code (and compiled library) from Python-like syntax
-  \end{itemize}
+Part of Python's advantage comes from having a de facto standard flexible-typed,
+mathematical array type from the NumPy library. \citep{REFRENCE!} While it would
+be possible to write such a data structure and interface functions in C (indeed,
+much of the numpy library is in C), this would be burdensome on the developer
+compared with simply downloading and installing a package. Even if such a C-based
+library existed, it still would not have the benefit of being integrated with
+the C NetCDF API like pupynere (and others) integrate with NumPy.
 
-\subsection{Modular Code Reuse}
-  \begin{itemize}
-    \item Needed T-Matrix calculations -> F77 Code
-    \item Wrapped with F2Py to give a nice numpy interface for scattering calculations
-    \item Used initially just for quick analyses of scattering effects
-    \item Was able to re-use this module (which lives as a separate project)
-    \item Re-use leads to better testing and fixing as opposed to separate code bases
-  \end{itemize}
+It should be noted that these examples are rather simple, as errors are not
+handled. However, this again works in favor of Python. In C, the errors are
+handled by checking return values of each function invokation, and appropriate
+action taken if the error code is not 0. In Python, the task is simpler
+since exception handling is available; at the end of the appropriate block, 
+one must simply catch the appropriate exception. This block can encompass
+many API calls.
+
+The impact of converting the NetCDF I/O code was a drastic reduction in code
+volume: 800 lines of code were removed by converting from C to Python. In
+addition, extending the I/O code was made much simpler, which encouraged
+some improvements to the metadata which was output in the files. These metadata
+include the code version, date and time of simulation, and random number generator
+seed (for later reproduction and testing of results).
+
+\section{Porting and Wrapping existing code}
+Several methods were considered for wrapping the low-level C code which was to
+be kept:
+\begin{itemize}
+    \item Python C-API
+    \item Ctypes
+    \item F2Py
+    \item Cython
+\end{itemize}
+The Python C-API was discounted as being too low-level and fragile, as well
+as time-consuming to develop and get correct.  F2Py's C support, with its
+main focus on FORTRAN, was deemed insufficient for the needs of this project.
+Cython, (a fork of the Pyrex project), is a tool to generate C code (utilizing
+Python's C-API) from a Python-like syntax. This has use both in optimizing
+Python code as well as interfacing with external libraries. At the time the
+project was deemed too immature to be relied upon; since that time the project
+has gone onto wide success and is used by many scientific Python projects
+as the method of choice for interfacing Python with compiled code. Ctypes was
+chosen as the mature solution, having gained acceptance into Python's standard
+library as of version 2.5. \citep{CTYPES REFERENCE}
+
+Ctypes provides a way of opening a shared library (a .so file on UNIX or a .dll
+on Windows) and obtaining references to the individual functions contained
+within. To pass the proper data structures to these functions, Ctypes provides
+a set of classes that map to the various C data types (pointers, int, float, etc.).
+These low level types can be assembled into full C-styles structures. Once a references
+to the desired function is obtained, one sets the proper types for the function's
+arguments as well as its return value. One calls the function by creating the
+proper structures, filling them with information, and passing them to the function.
+This approach has the unique property of having the entire interface to the compiled
+code being maintained in Python. It should also be noted that numpy arrays
+can be passed as pointers to the appropriate data type using ctypes.
+A simplified version of some of the simulator's ctypes code is given below:
+\lstinputlisting[caption=]{ctypes-example.py}
 
 \section{Conclusion}
 The use of Python enabled the rapid development of the additional required
-functionality; total development time was approximately 3 months for a graduate
+functionality; total development time was approximately 1 month for a graduate
 student working full-time. Through the use of Python's standard library, the required
 features were added without a large increase in code size (and hence maintainance
 burden).  In fact, porting to Python, in terms of lines of code, actually reduced
 the size of the code base. The initial size of the code was 5400 lines of C code.
 The final ported version has 2000 lines of Python and 2900 lines of C (not including
-the separate library for scattering calculations).
+the separate library for scattering calculations). This port came with no measureable
+performance penalty; while the new Python code is no doubt slower, the sections of
+the code responsible for the overwhelming majority of run time remains in slow.
+This shows the utility of being able to combine the two languages so that one
+can benefit from their respective strengths.
 
 Porting this software package to Python has demonstrated that Python posesses
 many attributes that make it easier for developing than in traditional, statically
