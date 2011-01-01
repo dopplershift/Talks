@@ -102,7 +102,7 @@ linewidth=240pt
     \item Needed to develop simulation code further and leveraged Python to improve rate of development:
     \begin{itemize}
       \item<3-> Improve command line usability \only<4->{\alert<4>{[optparse]}}
-      \item<3-> Vastly improve configuration files \only<5->{\alert<5>{[ConfigParse]}}
+      \item<3-> Vastly improve configuration files \only<5->{\alert<5>{[ConfigParser]}}
       \item<3-> Keep debugging output but hide from users \only<6->{\alert<6>{[logging]}}
       \item<3-> Update the NetCDF code with more output \only<7->{\alert<7>{[pupynere]}}
       \item<3-> Improve scatter calculation code \only<8->{\alert<8>{[existing python code]}}
@@ -122,10 +122,10 @@ linewidth=240pt
       \begin{itemize}
         \item collections, itertools - collecting and looping over items
         \item math - mathematical functions
-        \item warnings - issuing and supressing warnings
+        \item warnings - issuing and suppressing warnings
         \item os.path - OS-independent path/file-name manipulation
         \item datetime, time, calendar - working with dates and times
-        \item \alert<4->{ConfigParse} - configuration file parsing
+        \item \alert<4->{ConfigParser} - configuration file parsing
         \item \alert<4->{optparse} - command-line option parsing
         \item \alert<4->{logging} - controlling output
         \item \alert<4->{ctypes} - calling into libraries
@@ -139,7 +139,7 @@ linewidth=240pt
     \item The radar simulation software makes use of configuration files to
       control various radar operation parameters
     \item Old format read values from a file in fixed order (Text field present for user but not parsed)
-    \item Made use of ConfigParse module from the standard library
+    \item Made use of ConfigParser module from the standard library
     \item Provides flexible configuration files with support for sections and comments
     \item Simple API to open a configuration file and begin reading options
   \end{itemize}
@@ -311,7 +311,7 @@ Options:
         \item Dynamically grab function names and specify calling types
         \item Can use pointer types to pass numpy arrays
     \end{itemize}
-    \item<2-> \alert<4->{F2Py} - wrap and call fortran code from Python
+    \item<2-> \alert<4->{F2Py} - wrap and call FORTRAN code from Python
     \item<3-> Cython - Generate C-code (and compiled library) from Python-like syntax
   \end{itemize}
 \end{frame}
@@ -319,7 +319,7 @@ Options:
 \begin{frame}[<+->]{Modular Code Reuse}
   \begin{itemize}
     \item Needed T-Matrix calculations -> F77 Code
-    \item Wrapped with F2Py to give a nice numpy interface for scattering calculations
+    \item Wrapped with F2Py to give a nice NumPy interface for scattering calculations
     \item Used initially just for quick analyses of scattering effects
     \item Was able to re-use this module (which lives as a separate project)
     \item Re-use leads to better testing and fixing as opposed to separate code bases
