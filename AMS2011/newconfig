@@ -1,10 +1,22 @@
-[Scan]
-    # Scan is made up of a set of sweeps
-    [[Sweep1]]
-    AzAngles = 200, 345 #Degrees
-    ElAngles = 0.5 #Degrees
-    PRT = 0.00098667 #Seconds
-    PulseLength = 0.00000157 # seconds
-    RotationRate = 19.2261 # deg. per sec.
-    NumPulses = 52 #pulses per radial
-    GateLength = 250 # meters
+# Scan is made up of a set of sweeps
+[Sweep1]
+#Degrees
+AzAngles = 200, 345
+
+#Degrees
+ElAngles = 0.5
+
+#Seconds
+PRT = 0.00098667
+
+# seconds
+PulseLength = 0.00000157
+
+# deg. per sec.
+RotationRate = 19.2261
+
+#pulses per radial
+NumPulses = 52
+
+# meters
+GateLength = 250
