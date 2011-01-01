@@ -60,46 +60,50 @@ linewidth=220pt
 
 
 \section{Introduction}
-Python, as a dynamic programming language, is frequently used as a "glue" language--the reference
-being that it is used to glue together different parts of existing software. As a dynamic language,
-development time tends to be very quick, at a cost of run-time performance. However, for much of
-the code that is written, run-time performance is unimportant, so rapid devlopment can produce
-large gains, especially in a research setting, where code turnover is frequent. Part of this utility
-also comes from Python's feature-filled standard library, which helps a developer find needed
-functionality without spending time searching for options.
+Python, as a dynamic programming language, is frequently used as a "glue"
+language--the reference being that it is used to glue together different parts
+of existing software. As a dynamic language, development time tends to be very
+quick, at a cost of run-time performance. However, for much of the code that is
+written, run-time performance is unimportant; therefore a trade off that
+gives rapid development can produce large gains. This is often true in a research
+setting, where code turnover is frequent as many different solutions are tried.
+Part of this utility also comes from Python's feature-filled standard library,
+which helps a developer find needed functionality without spending time
+searching for options.
 
-
-
-As a case study in using Python, this work will examine the process of porting an existing
-radar simulation software package from C to Python.  Various Python modules used in the
-porting process and their impacts on the size, and more imporantly, functionality, of the
-code base will be discussed.
+As a case study in using Python, this work will examine the process of porting
+an existing radar simulation software package from straight C to a mixture of C
+and Python. Various Python modules used in the porting process and their impacts
+on the size, and more importantly, functionality, of the code base will be
+discussed. The ease of development for adding these features is also discussed.
 
 \section{Simulation Software}
-The software under study here is a package for simulating weather radar data using
-numerical simulation output as the source for the atmosphere being simulated. In addition,
-the simulator relies on a set of configuration data to control the radar hardware
-characteristics as well as the operating parameters. The original code base was in C
-and had been heavily optimized to optimize run-time performance, with a single simulation
-taking several hours on a single processor machine.
+The software under study here is a package for simulating weather radar data,
+which uses numerical simulation output as an input source. In addition, the
+simulator relies on a set of configuration data to control the radar hardware
+characteristics as well as the operating parameters. The original code base was
+in C and had been heavily optimized to optimize run-time performance, with a
+single simulation taking several hours on a single processor machine.
 
-Two separate changes in the needs of the software were the motivation behind the porting
-of the software to Python. The first was that there was a desire to begin using the
-emulator in a classroom setting. Classroom use by students required a large amount
-of ease of use so as not to be a support burden.  To support this role, it was
-recognized that the terminal interactivity (commandline invocation and the output
-to the user) and the configuration file format would need to be improved. The second
-driving requirement was the need to upgrade the code to support simulation of
-dual-polarimetric radars. Part of this required  incorprating code for more
-sophisticated scattering models. Also, the code needed to be able to use a variety of different scattering
-models--this is needed to examine the differences that result from different approximations.
+Two separate changes in the needs of the software were the motivation behind
+moving to the use of Python. The first was that there was a desire to
+begin using the emulator in a classroom setting. Classroom use by students
+required a large upgrade to the ease of use so as not to be a support burden. To
+support this role, it was recognized that the terminal interactivity
+(commandline invocation and the output to the user) and the configuration file
+format would need to be improved. The second driving requirement was the need to
+upgrade the code to support simulation of dual-polarimetric radars. Part of this
+required incorporating code for more sophisticated scattering models. Also, the
+code needed to be able to use a variety of different scattering models--this is
+needed to examine the differences that result from different approximations.
 Generating simulated dual-polarimetric data also required changes to the I/O
-sections of the code to read in new parameters as well as write out new generated
-fields. A major consideration was the simplicity with which NetCDF files (the 
-format used by the simulator) can be manipulated using Python.
-All of these changes were constrained to what will be referred to as the "front-end". The
-heavily optimized computational core (the "backend") of the simulator did not require significant
-changes, and thus it was desired to keep it for the most part unchanged.
+sections of the code to read in new parameters as well as write out new
+generated fields. A major consideration was the simplicity with which NetCDF
+files (the format used by the simulator) can be manipulated using Python. All of
+these changes were constrained to what will be referred to as the "frontend".
+The heavily optimized computational core (the "backend") of the simulator did
+not require significant changes, and thus it was desired to keep it for the most
+part unchanged.
 
 The author's recent (at the time) experience with Python in other domains gave
 indications that Python was a promising choice for this additional development.
@@ -117,30 +121,30 @@ to join the new Python front-end to the C-based backend.
 
 \section{Python Standard Library}
 In addition to language syntax and features that enable rapid development, part of 
-rapid development comes from Python's feature-filled standard library. This leads
+the rapid development times in Python comes from its feature-filled standard library. This leads
 many Python developers to refer to Python as having "batteries included." The standard
 library gives developers a starting point to look for a given set of functionality: 
 running external processes, working files and paths, regular expressions, etc. In addition
 to the benefit as a starting point, which should not be underestimated, the standard
 library reduces complications from software dependencies. The modules in the standard
-library can be relied upon to be present and don't need to be tested for and suggested
-for installation if necessary. Some of the modules used in the code include:
+library can be relied upon to be present; thus no need to test for their presence
+and alert the user to install if necessary. Some of the modules used in the code include:
 
 \begin{itemize}
     \item collections - item collections
     \item itertools - iterating over groups of items
     \item math - mathematical functions
-    \item warnings - issuing and supressing warnings
+    \item warnings - issuing and suppressing warnings
     \item os.path - path/file-name manipulation
     \item datetime, time, calendar - dates and times
-    \item ConfigParse - configuration file parsing
+    \item ConfigParser - configuration file parsing
     \item optparse - command-line option parsing
     \item logging - controlling output
     \item ctypes - calling into dll/.so libraries
 \end{itemize}
 
 In this work, we examine specifically the use of standard library modules for:
-command line parsing, configuration files, and message logging.
+command line parsing (optparse), configuration files (ConfigParser), and message logging (logging).
 
 \subsection{Configuration Files}
 One of the most significant upgrades required to improve the program's usability
@@ -153,11 +157,13 @@ While the format is not too difficult to understand at first glance, it is
 somewhat deceptive. Each line is made up of a string with a value. While the
 string indicates to the user what the value represents, these strings are not
 recognized by the program at all--the lines were simply read in a fixed order.
-This is a very unfriendly format for new users, and prone to inducing errors
-when new files are created. Additionally, it was impossible to have any
-comments in the file to help explain values and units.
+Any accidental shuffling of the lines, or adding new ones at the wrong location,
+would result in cryptic error messages. This is a very unfriendly format for new
+users, and prone to inducing errors when new files are created. Additionally, it
+was impossible to have any comments in the file to help explain values and
+units.
 
-When porting to Python, the standard library's ConfigParse module was selected.
+When porting to Python, the standard library's ConfigParser module was selected.
 This module provides simple and flexible parsing of configuration files. 
 A sample of the new configuration file format is given below:
 
@@ -167,25 +173,25 @@ The new format is much more flexible, allowing for comments as well as having
 no fixed order for the different entries. Additionally, the configuration file
 can be broken into separate sections, which can be helpful to organize the file
 as well as for the programmer to keep the configuration compartmentalized. From
-a programmer's standpoint, the use of ConfigParse yields much simpler and 
-maintainable code. The actual parsing of strings into values is offloaded to
+a programmer's standpoint, the use of ConfigParser yields much simpler and 
+maintainable code. The actual parsing of lines into keys and values is offloaded to
 the library, so that one only needs to request certain parameters by name.
 Also, the library supports parsing a flexible (i.e. unknown) number of values
 as a single parameter, which was not possible with the old format.
 
 The end result of the conversion of the configuration parsing code from plain C
-to using Python's ConfigParse module was a reduction of 600 LOC. While the loss
+to using Python's ConfigParser module was a reduction of 600 LOC. While the loss
 in code size represents a sure gain in code maintainability (fewer lines gives
 fewer opportunities for bugs), the new code itself is structured much better
-for maintainance. Adding support for new paramters is as simple as just looking
-up the new parameter name (having a sensible default if it is unfound). Unspecified
+for maintenance. Adding support for new parameters is as simple as just looking
+up the new parameter name (having a sensible default if it is not found). Unspecified
 parameters using a default would have been exceedingly difficult, if not impossible,
 using the old C-based code. All of these gains together represent a large gain
 in program usability.
 
 \subsection{Message Logging}
 A second change needed to improve the simulator's usability was to improve the
-users that were displayed to the user.  As a large research code base under heavy
+messages that were displayed to the user.  As a large research code base under heavy
 development, the original code displayed a great deal of output to the console.
 Such messages would be distracting and/or confusing to the user. The messages
 provided useful debugging information, however, so simply removing the messages
@@ -197,19 +203,19 @@ purpose of logging messages. The full framework provides a way of controlling
 message formatting, messages at different levels (warn, error, debug, etc.), and
 controlling where messages are sent. Much of the complete functionality was
 considered overkill for the application here. However, a simple application of
-the library allows uses the message levels to specify messages as either
+the library uses the message levels to specify messages as either
 debugging, information, or errors. These messages are then either sent to the
 screen (by default) or to a log file.
 
 The inclusion of logging messages to a file allows the user to easily collect
 a log of the debugging messages, which could be submitted as feedback in the
 event of a problem. This streamlines the process of trying to fix issues that
-inevitably arise as code gets used more wisely under configurations that have
-not been tested.
+inevitably arise as code gets used more widely under configurations that have
+not previously been tested.
 
 The total changes in the code base were a gain of 40 lines of Python code.
-Additionally, all of the print statements in the code ported to Python became
-calls to logging functions. For such a small gain in the code base, useful
+Additionally, all of the print statements in the code became
+calls to logging functions. For such a small gain in the code base size, useful
 features for controlling and saving messages were gained, as well as putting
 more polish on the user-visible face of the program.
 
@@ -222,9 +228,9 @@ represented essentially a text file embedded into the source. Any changes to
 the interface required a separate update to reflect new options in the text.
 
 While the Python standard library's optparse module did not motivate the port
-to Python, once the port was underway, it was an clear choice for implementing
+to Python, once the port was underway, it was a clear choice for implementing
 command line parsing. optparse provides a clear advantage in terms of creating
-code that can easily extended to support new options.  Each option is specified
+code that can easily be extended to support new options.  Each option is specified
 individually, giving:
 \begin{itemize}
     \item long and short command names
@@ -243,11 +249,11 @@ help screen for the program, which can be displayed by invoking the program
 with the '-h' option or any other case the programmer wishes.
 
 A typical invocation of the program from the command line, which looks like
-any typical Linux/UNIX program is:
+any typical Linux/UNIX program, is:
 
 {\scriptsize\verb$radarsim -vvv -d -l run.log config/example.config$}
 
-The code used to parse this looks like:
+The code used to add an option looks like:
 
 \lstset{language=Python}
 \lstinputlisting[caption=]{optparse-large.py}
@@ -255,7 +261,7 @@ The code used to parse this looks like:
 The use of this module increased the size of the code by 10 lines. This does
 not include the old hard-coded help page. This additional code added options
 for the logging framework that were not available in the old code, as well
-as provides a generated, UNIX-like help screen. An example of the help screen
+as provided a generated, UNIX-like help screen. An example of the help screen
 is given below:
 
 {\tiny
@@ -278,10 +284,10 @@ Options:
 \end{verbatim}}
 
 All of these changes required minimal development effort. It should be noted
-that as of Python's 2.7 release, the optprase library has been deprecated in
+that as of Python's 2.7 release, the optparse library has been deprecated in
 favor of the argparse module. This module provides a very similar interface
 in many respects, but improves handling of required arguments and default
-parameter values. \citep{REFERENCE!}
+parameter values. \cite{REFERENCE!}
 
 \section{NetCDF}
 In addition to the utility of the standard library, the syntax and features of Python
@@ -289,11 +295,11 @@ permit library developers to create more expressive interfaces than would be pos
 in may other languages. Much of this stems from Python's dynamic nature.
 
 NetCDF is a specific example of such a library. The available Python interfaces for creating
-NetCDF files is vastly more simple than the reference C interface. Part of the reason for
-simplicity is the available of a de facto standard array type from the NumPy library. NumPy
-provides a mathmatical array type that handles memory allocation and provides array-based
+NetCDF files are vastly more simple than the reference C interface. Part of the reason for
+simplicity is the availability of a de facto standard array type for Python in the form of the NumPy library. NumPy
+provides a mathematical array type that handles memory allocation and provides array-based
 mathematical operations. The other reason for the simplicity is again Python's dynamic nature.
-As a self-describing, flexible file formats, the data types for different fields in NetCDF
+As a self-describing, flexible file format, the data types for different fields in NetCDF
 files are not known a priori. Combined with the need to know types when compiling, this
 leads to the creation of large amount of code (functions, data structures, etc.) to handle
 the possible cases.  A dynamic language lends itself much more readily to such a flexible-typed
@@ -311,7 +317,7 @@ The interface for all of these libraries is practically identical; ScientificPyt
 was the first and the other's followed the same interface since it proved so
 simple to use.
 
-As an exmple of the verbosity in reading an NetCDF file in C, see the listing
+As an example of the verbosity in reading a NetCDF file in C, see the listing
 below, which retrieves an array of values corresponding to the "Temperature"
 variable:
 
@@ -359,17 +365,16 @@ to make a C version that would have the same flexibility, many more lines of
 code would be need to check types and to allocate a pointer of the appropriate
 type.
 
-Part of Python's advantage comes from having a de facto standard flexible-typed,
-mathematical array type from the NumPy library. \citep{REFRENCE!} While it would
+While part of Python's advantage comes from  the NumPy library, it would
 be possible to write such a data structure and interface functions in C (indeed,
-much of the numpy library is in C), this would be burdensome on the developer
+much of the numpy library is in C). However, this would be burdensome on the developer
 compared with simply downloading and installing a package. Even if such a C-based
 library existed, it still would not have the benefit of being integrated with
 the C NetCDF API like pupynere (and others) integrate with NumPy.
 
 It should be noted that these examples are rather simple, as errors are not
 handled. However, this again works in favor of Python. In C, the errors are
-handled by checking return values of each function invokation, and appropriate
+handled by checking return values of each function invocation, and appropriate
 action taken if the error code is not 0. In Python, the task is simpler
 since exception handling is available; at the end of the appropriate block, 
 one must simply catch the appropriate exception. This block can encompass
@@ -396,47 +401,47 @@ as time-consuming to develop and get correct.  F2Py's C support, with its
 main focus on FORTRAN, was deemed insufficient for the needs of this project.
 Cython, (a fork of the Pyrex project), is a tool to generate C code (utilizing
 Python's C-API) from a Python-like syntax. This has use both in optimizing
-Python code as well as interfacing with external libraries. At the time the
+Python code as well as interfacing with external libraries. At the time, the
 project was deemed too immature to be relied upon; since that time the project
 has gone onto wide success and is used by many scientific Python projects
 as the method of choice for interfacing Python with compiled code. Ctypes was
 chosen as the mature solution, having gained acceptance into Python's standard
-library as of version 2.5. \citep{CTYPES REFERENCE}
+library as of version 2.5. \cite{CTYPES REFERENCE}
 
 Ctypes provides a way of opening a shared library (a .so file on UNIX or a .dll
 on Windows) and obtaining references to the individual functions contained
 within. To pass the proper data structures to these functions, Ctypes provides
 a set of classes that map to the various C data types (pointers, int, float, etc.).
-These low level types can be assembled into full C-styles structures. Once a references
+These low level types can be assembled into full C-style structures. Once a reference
 to the desired function is obtained, one sets the proper types for the function's
-arguments as well as its return value. One calls the function by creating the
+arguments as well as its return value. The function is called by creating the
 proper structures, filling them with information, and passing them to the function.
 This approach has the unique property of having the entire interface to the compiled
 code being maintained in Python. It should also be noted that numpy arrays
-can be passed as pointers to the appropriate data type using ctypes.
-A simplified version of some of the simulator's ctypes code is given below:
+can be passed as pointers to the appropriate data type using Ctypes.
+A simplified version of some of the simulator's Ctypes code is given below:
 \lstinputlisting[caption=]{ctypes-example.py}
 
 \section{Conclusion}
 The use of Python enabled the rapid development of the additional required
 functionality; total development time was approximately 1 month for a graduate
 student working full-time. Through the use of Python's standard library, the required
-features were added without a large increase in code size (and hence maintainance
+features were added without a large increase in code size (and hence maintenance
 burden).  In fact, porting to Python, in terms of lines of code, actually reduced
 the size of the code base. The initial size of the code was 5400 lines of C code.
 The final ported version has 2000 lines of Python and 2900 lines of C (not including
-the separate library for scattering calculations). This port came with no measureable
+the separate library for scattering calculations). This port came with no measurable
 performance penalty; while the new Python code is no doubt slower, the sections of
-the code responsible for the overwhelming majority of run time remains in slow.
+the code responsible for the overwhelming majority of run time remains in C.
 This shows the utility of being able to combine the two languages so that one
 can benefit from their respective strengths.
 
-Porting this software package to Python has demonstrated that Python posesses
+Porting this software package to Python has demonstrated that Python possesses
 many attributes that make it easier for developing than in traditional, statically
 typed languages. Python's standard library offers many built-in facilities that
 make accomplishing a task, like parsing a configuration file, a rapid endeavor.
 Python's 3rd-party support for NetCDF files is a large improvement over the
-support in C or FORTRAN.  The ability to use Python's ctypes library (or the
+support in C or FORTRAN.  The ability to use Python's Ctypes library (or the
 3rd part Cython package) to link to existing code allows one to keep
 performance-critical sections of the code in a language like C, while permitting
 rapid development in Python for the rest. This allows developers to use the best
