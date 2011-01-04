@@ -90,7 +90,7 @@ linewidth=240pt
     \item ...which implied a need to improve the usability
     \item Before: 5400 LOC C
     \item Now: 2000 LOC Python, 2900 LOC C (+8500 LOC FORTRAN Library)
-    \item Time to "python-ize": ~1 month for a single graduate student (me)
+    \item Time to "python-ize": ~1.5 months for a single graduate student (me)
   \end{itemize}
 \end{frame}
 
@@ -139,7 +139,7 @@ linewidth=240pt
     \item The radar simulation software makes use of configuration files to
       control various radar operation parameters
     \item Old format read values from a file in fixed order (Text field present for user but not parsed)
-    \item Made use of ConfigParser module from the standard library
+    \item Made use of \textbf{ConfigParser} module from the standard library
     \item Provides flexible configuration files with support for sections and comments
     \item Simple API to open a configuration file and begin reading options
   \end{itemize}
@@ -149,8 +149,10 @@ linewidth=240pt
   \frametitle{Configuration Files:Impacts}
   \begin{itemize}
     \only<1> { \lstinputlisting[caption=]{oldconfig} }
+    \lstset{basicstyle=\ttfamily\tiny}
     \only<2> { \lstinputlisting[caption=]{newconfig} }
-    \item<3-> Replaced brittle file format with something that is easy for users to understand
+    \lstset{basicstyle=\ttfamily\scriptsize}
+    \item<3-> Replaced brittle file format with something that is easy for users to understand and use
     \item<4-> Replaced brittle, unmaintainable code with something much easier to enhance
     \item<5-> Shrank code by 600 LOC
   \end{itemize}
@@ -163,9 +165,9 @@ linewidth=240pt
     \item Console messages are the way the program communicates with the user
     \item However, the messages that are useful to a developer are not the
       same as what other users needs to see
-    \item Logging libraries provide custom printing functions that allow fine-grained
+    \item Logging libraries provide custom printing functions that allow run-time
       control of what messages are printed
-    \item Python includes the {\bf logging} module that includes a raft of features:
+    \item Python includes the \textbf{logging} module that includes a raft of features:
     \begin{itemize}
       \item Control of message information (time, filename, line number, etc.)
       \item Different message commands for different levels (warning, info, debug, etc.)
@@ -179,7 +181,7 @@ linewidth=240pt
   \begin{itemize}
     \item Added 40 LOC to set up logging, replaced prints with logger.*
     \item Can optionally get detailed messages with a simple command line flag
-    \item Can turn on some messages only when \emph{I} want them
+    \item Can turn on some messages only when desired
     \item Can tell messages to log to a file
     \item No \#ifdefs or commenting/uncommenting prints
     \item Big improvements in usability for me as a developer and for other users
@@ -190,7 +192,7 @@ linewidth=240pt
   \lstset{language=Python}
   \frametitle{Command Line Parser}
   \begin{itemize}
-    \item optparse module included in Python standard library
+    \item \textbf{optparse} module included in Python standard library
     \item Handle parsing of commandline into passed in arguments and options:
 
     \verb$radarsim -vvv -d -l run.log config/example.config$
