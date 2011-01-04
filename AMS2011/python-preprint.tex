@@ -67,9 +67,9 @@ quick, at a cost of run-time performance. However, for much of the code that is
 written, run-time performance is unimportant; therefore a trade off that
 gives rapid development can produce large gains. This is often true in a research
 setting, where code turnover is frequent as many different solutions are tried.
-Part of this utility also comes from Python's feature-filled standard library,
-which helps a developer find needed functionality without spending time
-searching for options.
+Part of this utility also comes from Python's feature-filled standard library
+\cite{pythonlib}, which helps a developer find needed functionality without
+spending time searching for options.
 
 As a case study in using Python, this work will examine the process of porting
 an existing radar simulation software package from straight C to a mixture of C
@@ -79,11 +79,12 @@ discussed. The ease of development for adding these features is also discussed.
 
 \section{Simulation Software}
 The software under study here is a package for simulating weather radar data,
-which uses numerical simulation output as an input source. In addition, the
-simulator relies on a set of configuration data to control the radar hardware
-characteristics as well as the operating parameters. The original code base was
-in C and had been heavily optimized to optimize run-time performance, with a
-single simulation taking several hours on a single processor machine.
+which uses numerical simulation output as an input source \cite{radarsim}. In
+addition, the simulator relies on a set of configuration data to control the
+radar hardware characteristics as well as the operating parameters. The original
+code base was in C and had been heavily optimized to optimize run-time
+performance, with a single simulation taking several hours on a single processor
+machine.
 
 Two separate changes in the needs of the software were the motivation behind
 moving to the use of Python. The first was that there was a desire to
@@ -120,15 +121,17 @@ to join the new Python front-end to the C-based backend.
 
 
 \section{Python Standard Library}
-In addition to language syntax and features that enable rapid development, part of 
-the rapid development times in Python comes from its feature-filled standard library. This leads
-many Python developers to refer to Python as having "batteries included." The standard
-library gives developers a starting point to look for a given set of functionality: 
-running external processes, working files and paths, regular expressions, etc. In addition
-to the benefit as a starting point, which should not be underestimated, the standard
-library reduces complications from software dependencies. The modules in the standard
-library can be relied upon to be present; thus no need to test for their presence
-and alert the user to install if necessary. Some of the modules used in the code include:
+In addition to language syntax and features that enable rapid development, part
+of the rapid development times in Python comes from its feature-filled standard
+library \cite{pythonlib}. This leads many Python developers to refer to Python
+as having "batteries included." The standard library gives developers a starting
+point to look for a given set of functionality: running external processes,
+working files and paths, regular expressions, etc. In addition to the benefit as
+a starting point, which should not be underestimated, the standard library
+reduces complications from software dependencies. The modules in the standard
+library can be relied upon to be present; thus no need to test for their
+presence and alert the user to install if necessary. Some of the modules used in
+the code include:
 
 \begin{itemize}
     \item collections - item collections
@@ -164,8 +167,9 @@ was impossible to have any comments in the file to help explain values and
 units.
 
 When porting to Python, the standard library's ConfigParser module was selected.
-This module provides simple and flexible parsing of configuration files. 
-A sample of the new configuration file format is given below:
+\cite{configparser} This module provides simple and flexible parsing of
+configuration files. A sample of the new configuration file format is given
+below:
 
 \lstinputlisting[title=New Configuration Format]{newconfig}
 
@@ -198,14 +202,14 @@ provided useful debugging information, however, so simply removing the messages
 was not an option. What was needed was a way to turn on the messages when desired
 but have them off by default.
 
-Python provides the logging module in the standard library, which serves the
-purpose of logging messages. The full framework provides a way of controlling
-message formatting, messages at different levels (warn, error, debug, etc.), and
-controlling where messages are sent. Much of the complete functionality was
-considered overkill for the application here. However, a simple application of
-the library uses the message levels to specify messages as either
-debugging, information, or errors. These messages are then either sent to the
-screen (by default) or to a log file.
+Python provides the logging module in the standard library \cite{logging}, which
+serves the purpose of logging messages. The full framework provides a way of
+controlling message formatting, messages at different levels (warn, error,
+debug, etc.), and controlling where messages are sent. Much of the complete
+functionality was considered overkill for the application here. However, a
+simple application of the library uses the message levels to specify messages as
+either debugging, information, or errors. These messages are then either sent to
+the screen (by default) or to a log file.
 
 The inclusion of logging messages to a file allows the user to easily collect
 a log of the debugging messages, which could be submitted as feedback in the
@@ -227,11 +231,11 @@ were required to support the logging module.  Also, the original help screen
 represented essentially a text file embedded into the source. Any changes to
 the interface required a separate update to reflect new options in the text.
 
-While the Python standard library's optparse module did not motivate the port
-to Python, once the port was underway, it was a clear choice for implementing
+While the Python standard library's optparse module did not motivate the port to
+Python, once the port was underway, it was a clear choice for implementing
 command line parsing. optparse provides a clear advantage in terms of creating
-code that can easily be extended to support new options.  Each option is specified
-individually, giving:
+code that can easily be extended to support new options \cite{optparse}. Each
+option is specified individually, giving:
 \begin{itemize}
     \item long and short command names
     \item optional default values
@@ -287,23 +291,25 @@ All of these changes required minimal development effort. It should be noted
 that as of Python's 2.7 release, the optparse library has been deprecated in
 favor of the argparse module. This module provides a very similar interface
 in many respects, but improves handling of required arguments and default
-parameter values. \cite{REFERENCE!}
+parameter values. \cite{optparse}
 
 \section{NetCDF}
 In addition to the utility of the standard library, the syntax and features of Python
 permit library developers to create more expressive interfaces than would be possible
 in may other languages. Much of this stems from Python's dynamic nature.
 
-NetCDF is a specific example of such a library. The available Python interfaces for creating
-NetCDF files are vastly more simple than the reference C interface. Part of the reason for
-simplicity is the availability of a de facto standard array type for Python in the form of the NumPy library. NumPy
-provides a mathematical array type that handles memory allocation and provides array-based
-mathematical operations. The other reason for the simplicity is again Python's dynamic nature.
-As a self-describing, flexible file format, the data types for different fields in NetCDF
-files are not known a priori. Combined with the need to know types when compiling, this
-leads to the creation of large amount of code (functions, data structures, etc.) to handle
-the possible cases.  A dynamic language lends itself much more readily to such a flexible-typed
-file format, and this shows in the difference in interfaces.
+NetCDF is a specific example of such a library. The available Python interfaces
+for creating NetCDF files are vastly more simple than the reference C interface.
+Part of the reason for simplicity is the availability of a de facto standard
+array type for Python in the form of the NumPy library. NumPy provides a
+mathematical array type that handles memory allocation and provides array-based
+mathematical operations \cite{numpy}. The other reason for the simplicity is
+again Python's dynamic nature. As a self-describing, flexible file format, the
+data types for different fields in NetCDF files are not known a priori. Combined
+with the need to know types when compiling, this leads to the creation of large
+amount of code (functions, data structures, etc.) to handle the possible cases.
+A dynamic language lends itself much more readily to such a flexible-typed file
+format, and this shows in the difference in interfaces.
 
 There exist many Python libraries for reading NetCDF files:
 \begin{itemize}
@@ -315,7 +321,8 @@ There exist many Python libraries for reading NetCDF files:
 \end{itemize}
 The interface for all of these libraries is practically identical; ScientificPython's
 was the first and the other's followed the same interface since it proved so
-simple to use.
+simple to use. For this project, Pupynere was selected as it is implemented
+purely in Python \cite{pupynere}, making it easy to install as a dependency.
 
 As an example of the verbosity in reading a NetCDF file in C, see the listing
 below, which retrieves an array of values corresponding to the "Temperature"
@@ -406,7 +413,7 @@ project was deemed too immature to be relied upon; since that time the project
 has gone onto wide success and is used by many scientific Python projects
 as the method of choice for interfacing Python with compiled code. Ctypes was
 chosen as the mature solution, having gained acceptance into Python's standard
-library as of version 2.5. \cite{CTYPES REFERENCE}
+library as of version 2.5. \cite{ctypes}
 
 Ctypes provides a way of opening a shared library (a .so file on UNIX or a .dll
 on Windows) and obtaining references to the individual functions contained
@@ -424,7 +431,7 @@ A simplified version of some of the simulator's Ctypes code is given below:
 
 \section{Conclusion}
 The use of Python enabled the rapid development of the additional required
-functionality; total development time was approximately 1 month for a graduate
+functionality; total development time was approximately 1.5 months for a graduate
 student working full-time. Through the use of Python's standard library, the required
 features were added without a large increase in code size (and hence maintenance
 burden).  In fact, porting to Python, in terms of lines of code, actually reduced
@@ -449,15 +456,32 @@ tools for the job at hand and maximize their development time. For a scientist,
 this can also mean spending less time developing code and more time applying
 it to research problems.
 
-%\subsection{Thanks and Questions}
-%  Thanks to:
-%  \begin{description}[Matplotlib]
-%    \item[Python]{http://www.python.org}
-%    \item[NumPy]{http://numpy.scipy.org}
-%    \item[SciPy]{http://www.scipy.org}
-%    \item[Matplotlib]{http://matplotlib.sourceforge.net}
-%    \item[pupynere]{http://pypi.python.org/pypi/pupynere}
-%  \end{description}
-%  Questions?
+\begin{thebibliography}{9}
+        \bibitem{radarsim}
+                May, Ryan M. and Biggerstaff, Michael I. and Xue, Ming, 2007.
+                \emph{A Doppler Radar Emulator with an Application to the Detectability of Tornadic Signatures},
+                J. Atmos. Ocean. Tech., \textbf{12}, 1973--1996.
+        \bibitem{configparser}
+                \emph{ConfigParser -- Configuration file parser},
+                http://docs.python.org/library/configparser.html
+        \bibitem{ctypes}
+                \emph{ctypes -- A foreign function library for Python},
+                http://docs.python.org/library/ctypes.html
+        \bibitem{logging}
+                \emph{logging -- Logging facility for Python},
+                http://docs.python.org/library/logging.html
+        \bibitem{numpy}
+                \emph{NumPy Reference},
+                http://docs.scipy.org/doc/numpy/reference/
+        \bibitem{optparse}
+                \emph{optparse -- Parser for command line options},
+                http://docs.python.org/library/optparse.html
+        \bibitem{pupynere}
+                \emph{pupynere 1.0.13},
+                http://pypi.python.org/pypi/pupynere/
+        \bibitem{pythonlib}
+                \emph{The Python Standard Library},
+                http://docs.python.org/library/index.html
+\end{thebibliography}
 
 \end{document}
