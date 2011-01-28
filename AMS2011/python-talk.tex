@@ -1,5 +1,5 @@
 \documentclass[red, hyperref={pdfpagelabels=false}]{beamer}
-%\hypersetup{pdfpagemode=FullScreen}
+\hypersetup{pdfpagemode=FullScreen}
 
 \mode<presentation>
 \usepackage{beamerthemesplit}
@@ -17,7 +17,7 @@
 %\usetheme{Madrid}
 %\usetheme{Warsaw}
 
-\title[Porting Radar Simulation Software DRAFT (\today)]
+\title[Porting Radar Simulation Software]
 {Porting Radar Simulation Software to Python}
 \subtitle{A Case Study in the Benefits of Python}
 \author{Ryan May}
@@ -105,8 +105,8 @@ linewidth=240pt
       \item<3-> Vastly improve configuration files \only<5->{\alert<5>{[ConfigParser]}}
       \item<3-> Keep debugging output but hide from users \only<6->{\alert<6>{[logging]}}
       \item<3-> Update the NetCDF code with more output \only<7->{\alert<7>{[pupynere]}}
-      \item<3-> Improve scatter calculation code \only<8->{\alert<8>{[existing python code]}}
-      \item<3-> Leverage highly optimized computing code \only<9->{\alert<9>{[ctypes]}}
+      \item<3-> Improve scatter calculation code
+      \item<3-> Leverage highly optimized computing code
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -125,10 +125,10 @@ linewidth=240pt
         \item warnings - issuing and suppressing warnings
         \item os.path - OS-independent path/file-name manipulation
         \item datetime, time, calendar - working with dates and times
+        \item ctypes - calling into libraries
         \item \alert<4->{ConfigParser} - configuration file parsing
         \item \alert<4->{optparse} - command-line option parsing
         \item \alert<4->{logging} - controlling output
-        \item \alert<4->{ctypes} - calling into libraries
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -303,30 +303,30 @@ Options:
   \end{itemize}
 \end{frame}
 
-\section[Modularity]{Modularity and Wrapping existing code}
-\stepcounter{subsection}
-\begin{frame}{Wrapping code}
-  \begin{itemize}
-    \item<1-> \alert<4->{Ctypes} - wrap existing libraries
-    \begin{itemize}
-        \item Can express C structures in a python syntax
-        \item Dynamically grab function names and specify calling types
-        \item Can use pointer types to pass numpy arrays
-    \end{itemize}
-    \item<2-> \alert<4->{F2Py} - wrap and call FORTRAN code from Python
-    \item<3-> Cython - Generate C-code (and compiled library) from Python-like syntax
-  \end{itemize}
-\end{frame}
+%\section[Modularity]{Modularity and Wrapping existing code}
+%\stepcounter{subsection}
+%\begin{frame}{Wrapping code}
+%  \begin{itemize}
+%    \item<1-> \alert<4->{Ctypes} - wrap existing libraries
+%    \begin{itemize}
+%        \item Can express C structures in a python syntax
+%        \item Dynamically grab function names and specify calling types
+%        \item Can use pointer types to pass numpy arrays
+%    \end{itemize}
+%    \item<2-> \alert<4->{F2Py} - wrap and call FORTRAN code from Python
+%    \item<3-> Cython - Generate C-code (and compiled library) from Python-like syntax
+%  \end{itemize}
+%\end{frame}
 
-\begin{frame}[<+->]{Modular Code Reuse}
-  \begin{itemize}
-    \item Needed T-Matrix calculations -> F77 Code
-    \item Wrapped with F2Py to give a nice NumPy interface for scattering calculations
-    \item Used initially just for quick analyses of scattering effects
-    \item Was able to re-use this module (which lives as a separate project)
-    \item Re-use leads to better testing and fixing as opposed to separate code bases
-  \end{itemize}
-\end{frame}
+%\begin{frame}[<+->]{Modular Code Reuse}
+%  \begin{itemize}
+%    \item Needed T-Matrix calculations -> F77 Code
+%    \item Wrapped with F2Py to give a nice NumPy interface for scattering calculations
+%    \item Used initially just for quick analyses of scattering effects
+%    \item Was able to re-use this module (which lives as a separate project)
+%    \item Re-use leads to better testing and fixing as opposed to separate code bases
+%  \end{itemize}
+%\end{frame}
 
 \section{Wrapping up}
 \stepcounter{subsection}
@@ -337,7 +337,7 @@ Options:
     \item Offers many built-in libraries that can simplify development
     \item Can \emph{drastically} simplify working with NetCDF files
     \item Permits keeping performance-sensitive compiled codes
-    \item Promotes through its module system the use and \emph{reuse} of modular code
+%    \item Promotes through its module system the use and \emph{reuse} of modular code
     \item is \emph{not} necessarily enabling any functionality that could not be done in C or FORTRAN...
     \item ...but makes it much easier
   \end{itemize}
