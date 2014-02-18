@@ -7,6 +7,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{lmodern}
+\usepackage{siunitx}
 %\usepackage{listings,bera}
 %\usepackage{color}
 
@@ -51,10 +52,39 @@
 \begin{frame}
 	\frametitle{Applications}
 	\begin{itemize}
-		\item Any quantitative use of the data necessitates data correction
+		\item Any quantitative use of the data necessitates correction for attenuation
 		\item QPE
 		\item Hydrometeor Classification
 		\item 3dB error -> 64\% change in rain rate
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Attenuation Correction}
+	\begin{itemize}
+		\item Many different algorithms in the literature
+		\item Ones examined here
+		\begin{itemize}
+			\item Linear $\Phi_{DP}$
+			\item ZPHI
+			\item Self-Consistent
+			\item Fully Self-Consistent
+		\end{itemize}
+		\item All of these rely upon empirically determined coefficients
+		\item Which necessitates making certain assumptions (temperature,
+		DSD, shape, etc.)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Testing Corrections}
+	\begin{itemize}	
+		\item Testing of these techniques usually rely upon comparison with
+		unattenuated (S-band) data
+		\item Another method involves examining reduction in QPE bias upon correction
+		\item Instead here we use simulated data to provide data with and without
+		attenuation
+		\item Simulator allows changing assumptions to see impacts on correction
 	\end{itemize}
 \end{frame}
 
@@ -131,16 +161,41 @@
 
 \begin{frame}
 	\frametitle{Microphysics (cont.)}
-	\centering{\includegraphics[scale=0.6]{figures/distribution-comparison.pdf}}
+	\begin{center}
+		\includegraphics[scale=0.6]{figures/distribution-comparison.pdf}
+	\end{center}
 \end{frame}
 
+\section{Example Output}
+\stepcounter{subsection}
 \begin{frame}
 	\frametitle{Model Field}
-	\includegraphics[scale=0.5]{figures/commas_wz_3600_qr_wind_vectors.pdf}
+	\begin{center}
+		\includegraphics[scale=0.5]{figures/commas_wz_3600_qr_wind_vectors.pdf}	
+	\end{center}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Example Configuration}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Antenna gain & \SI{45.5}{dB} \\
+	        Peak power & \SI{250}{\kilo\watt} \\
+	        First range gate & \SI{500}{\meter} \\
+	        Noise power & \SI{-113}{dBm} \\
+	        Elevation & \SI{0.5}{\degree} \\
+	        PRT & \SI{0.667}{\milli\second} \\
+	        Rotation Rate & \SI{20}{\degree\per\second} \\
+	        Pulses per radial & \num{75} \\
+	        Gate length & \SI{125}{\meter} \\
+	        Antenna Limits & Main-lobe only \\
+			Wavelength &  \SI{5}{\centi\meter} \\
+			Beamwidth & \SI{1.0}{\degree} \\
+			Radial Spacing & \SI{1.0}{\degree} \\
+			\hline
+	    \end{tabular}
+	\end{center}
 \end{frame}
 
 \begin{frame}
