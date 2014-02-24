@@ -66,7 +66,6 @@
 			\item Linear $\Phi_{DP}$
 			\item ZPHI
 			\item Self-Consistent
-			\item Fully Self-Consistent
 		\end{itemize}
 		\item All of these rely upon empirically determined coefficients
 		\item Which necessitates making certain assumptions (temperature,
@@ -198,18 +197,32 @@
 
 \begin{frame}
 	\frametitle{Example Images}
+	\includegraphics[scale=0.4]{figures/C_Single.png}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Example Images (cont.)}
+	\includegraphics[scale=0.4]{figures/C_Dual.png}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Example Images (cont.)}
+	\includegraphics[scale=0.4]{figures/C_Attenuation.png}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Example Images (cont.)}
+	\includegraphics[scale=0.4]{figures/X_Single.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Example Images (cont.)}
+	\includegraphics[scale=0.4]{figures/X_Dual.png}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Example Images (cont.)}
+	\includegraphics[scale=0.4]{figures/X_Attenuation.png}
 \end{frame}
 
 \section{Correction Algorithms}
@@ -255,25 +268,6 @@
 			Error &= \sum_{j=1}^N \left| \Phi_{DP}^{filt}(r_j) - \Phi_{DP}^c(r_j;\gamma) \right|
 			\end{align*}
 	\end{itemize}
-\end{frame}
-
-\begin{frame}
-		\frametitle{Fully Self-Consistent}
-		\begin{itemize}
-			\item Described by Gorgucci et al. (2007)
-			\item Uses iterative procedure to estimate both attenuation and differential attenuation simultaneously
-			\item Estimate a $\Phi_{DP}$ profile from attenuation and compare to
-			actual data
-			\begin{align*}
-			\alpha_d &= \epsilon \alpha_h \\
-			K_{dp} &= \left[ \frac{\alpha_h}{a_h Z_h^{b_h} Z_{dr}^{c_h}} \right]^{1/d_h} \\
-			K_{dp} &= \left[ \frac{\alpha_d}{a_d Z_h^{b_d} Z_{dr}^{c_d}} \right]^{1/d_d} \\
-			\min(\Delta h) &= \min \left\lbrace \int_{r_0}^r \gamma_h \Phi^{h}_{dp}(s) - [\Phi_{dp}(s) - \Phi_{dp}(r_0)]\,ds \right\rbrace \\
-			\min(\Delta d) &= \min \left\lbrace \int_{r_0}^r \gamma_d \Phi^{d}_{dp}(s) - [\Phi_{dp}(s) - \Phi_{dp}(r_0)]\,ds \right\rbrace \\
-			\widetilde{\alpha}_h &= \gamma_h ^{d_h} \alpha_h \\
-			\widetilde{\alpha}_d &= \gamma_h ^{d_d} \alpha_d
-			\end{align*}
-		\end{itemize}
 \end{frame}
 
 \begin{frame}
