@@ -28,11 +28,9 @@
 \begin{document}
 
 \begin{frame}
-\titlepage
+	\titlepage
 \end{frame}
-%\frame{\titlepage}
 
-\section[Outline]{}
 \begin{frame}{Outline}
     \tableofcontents
 \end{frame}
@@ -190,7 +188,7 @@
 	        Pulses per radial & \num{75} \\
 	        Gate length & \SI{125}{\meter} \\
 	        Antenna Limits & Main-lobe only \\
-			Wavelength &  \SI{5}{\centi\meter} \\
+			Wavelength &  \SI{5.5}{\centi\meter} \\
 			Beamwidth & \SI{1.0}{\degree} \\
 			Radial Spacing & \SI{1.0}{\degree} \\
 			\hline
@@ -217,19 +215,96 @@
 \section{Correction Algorithms}
 \stepcounter{subsection}
 \begin{frame}
-	\frametitle{Algorithms Descriptions}
+	\frametitle{Linear $\Phi_{DP}$}
+	\begin{itemize}
+		\item Described by Bringi et al. (1990)
+		\item Formulate linear relationship between $K_{DP}$ and $A_H$
+		\begin{align*}
+			A_H &= \beta_H K_{DP} \\
+			A_D &= \beta_D K_{DP}
+		\end{align*}
+		\item Leads to direct conversion between $\Phi_{DP}$  and  both
+				$\alpha_H$ and $\alpha_D$
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Algorithm Descriptions (cont.)}
+	\frametitle{ZPHI}
+	\begin{itemize}
+		\item Described by Testud et al. (2000)
+		\item Based around Hitschfeld (1954) reflectivity-based method
+		\item Uses linear $\Phi_{DP}$ to provide constraint
+			\begin{align*}
+			I(r, r_0) &= \num{0.46}b\int_r^{r_0}Z_a^b(s)\,ds \\
+			\alpha(r_0) &= \frac{Z_a^b(r_0)}{I(r_1,r_0)} \lbrace 10^{\num{0.1}b\gamma\Delta\Phi} - 1\rbrace \\
+			\alpha(r) &= \frac{Z_a^b(r)}{I(r_1,r_0) + \lbrace 10^{\num{0.1}b\gamma\Delta\Phi} - 1\rbrace I(r, r_0)}
+			  \times \lbrace 10^{\num{0.1}b\gamma\Delta\Phi} - 1\rbrace
+			\end{align*}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Self-Consistent}
+	\begin{itemize}
+		\item Described by Bringi et al. (2001)
+		\item Adds a "self-consistent" restriction to ZPHI
+		\item Attempts to automatically find the optimal value of $\gamma$
+			 \begin{align*}
+			\phi_{DP}^c(r;\gamma) &= 2 \int_{r_0}^r \frac{A_h(s;\gamma)}{\gamma}\,ds \\
+			\gamma_{min} &\leq \gamma \leq \gamma_{max} \\
+			Error &= \sum_{j=1}^N \left| \Phi_{DP}^{filt}(r_j) - \Phi_{DP}^c(r_j;\gamma) \right|
+			\end{align*}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+		\frametitle{Fully Self-Consistent}
+		\begin{itemize}
+			\item Described by Gorgucci et al. (2007)
+			\item Uses iterative procedure to estimate both attenuation and differential attenuation simultaneously
+			\item Estimate a $\Phi_{DP}$ profile from attenuation and compare to
+			actual data
+			\begin{align*}
+			\alpha_d &= \epsilon \alpha_h \\
+			K_{dp} &= \left[ \frac{\alpha_h}{a_h Z_h^{b_h} Z_{dr}^{c_h}} \right]^{1/d_h} \\
+			K_{dp} &= \left[ \frac{\alpha_d}{a_d Z_h^{b_d} Z_{dr}^{c_d}} \right]^{1/d_d} \\
+			\min(\Delta h) &= \min \left\lbrace \int_{r_0}^r \gamma_h \Phi^{h}_{dp}(s) - [\Phi_{dp}(s) - \Phi_{dp}(r_0)]\,ds \right\rbrace \\
+			\min(\Delta d) &= \min \left\lbrace \int_{r_0}^r \gamma_d \Phi^{d}_{dp}(s) - [\Phi_{dp}(s) - \Phi_{dp}(r_0)]\,ds \right\rbrace \\
+			\widetilde{\alpha}_h &= \gamma_h ^{d_h} \alpha_h \\
+			\widetilde{\alpha}_d &= \gamma_h ^{d_d} \alpha_d
+			\end{align*}
+		\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Coefficient Regression}
+	\begin{itemize}
+		\item Need to determine own set of coefficients for algorithms
+		\item Original algorithms all use different assumptions
+		\item All relations some kind of power law
+		\item Make best-case coefficients using actual data from model and
+		the assumptions used in simulation
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Coefficient Regression (cont.)}
+	\begin{center}
+		\includegraphics[scale=0.35]{figures/basic_power_law.png}
+	\end{center}
+	\begin{itemize}
+		\item Clearly bias in the fit curve
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Coefficient Regression (cont.)}
+	\begin{center}
+		\includegraphics[scale=0.35]{figures/weighted_power_law.png}
+	\end{center}
+	\begin{itemize}
+		\item Much better when using $A_H^2$ as the weights in regression
+	\end{itemize}
 \end{frame}
 
 \section{Errors}
@@ -237,72 +312,135 @@
 \subsection{Model Errors}
 \begin{frame}
 	\frametitle{Experimental Configuration}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Antenna gain & \SI{45.5}{dB} \\
+	        Peak power & \SI{250}{\kilo\watt} \\
+	        First range gate & \SI{500}{\meter} \\
+	        Noise power & \SI{-113}{dBm} \\
+	        Elevation & \SI{0.5}{\degree} \\
+	        PRT & \SI{0.667}{\milli\second} \\
+	        Rotation Rate & \SI{20}{\degree\per\second} \\
+	        Pulses per radial & \num{75} \\
+	        Gate length & \SI{100}{\meter} \\
+	        Antenna Limits & Main-lobe only \\
+			Beamwidth & \SI{0.25}{\degree} \\
+			Radial Spacing & \SI{0.25}{\degree} \\
+			Scattering Model & T-Matrix \\
+			\hline
+	    \end{tabular}
+	\end{center}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Good Assumptions}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Temperature & \SI{283}{\kelvin} \\
+	        Drop Shape Model & Brandes \\
+	        Wavelength & \SI{5.5}{\centi\meter} / \SI{3.2}{\centi\meter} \\
+			\hline
+	    \end{tabular}
+	\end{center}	
 \end{frame}
 
 \begin{frame}
 	\frametitle{Wavelength}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Temperature & \SI{283}{\kelvin} \\
+	        Drop Shape Model & Brandes \\
+	        Wavelength & \SI{5.0}{\centi\meter} / \SI{3.0}{\centi\meter} \\
+			\hline
+	    \end{tabular}
+	\end{center}	
 \end{frame}
 
 \begin{frame}
 	\frametitle{Temperature}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Temperature & Model Field (\SI{283}{\kelvin}) \\
+	        Drop Shape Model & Brandes \\
+	        Wavelength & \SI{5.5}{\centi\meter} / \SI{3.2}{\centi\meter} \\
+			\hline
+	    \end{tabular}
+	\end{center}	
 \end{frame}
 
 \begin{frame}
 	\frametitle{Drop Shape Model}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Temperature & \SI{283}{\kelvin} \\
+	        Drop Shape Model & Pruppacher \\
+	        Wavelength & \SI{5.5}{\centi\meter} / \SI{3.2}{\centi\meter} \\
+			\hline
+	    \end{tabular}
+	\end{center}	
 \end{frame}
 
-\begin{frame}
-	\frametitle{Canting}
-\end{frame}
+%\begin{frame}
+%	\frametitle{Canting}
+%\end{frame}
 
 \begin{frame}
 	\frametitle{Worst Case}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Temperature & Model Field (\SI{283}{\kelvin}) \\
+	        Drop Shape Model & Pruppacher \\
+	        Wavelength & \SI{5.0}{\centi\meter} / \SI{3.0}{\centi\meter} \\
+			\hline
+	    \end{tabular}
+	\end{center}	
 \end{frame}
 
-\subsection{Spatial Sampling Errors}
-\begin{frame}
-	\frametitle{Experimental Configuration}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Base Configuration}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Sidelobes}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Increased Beamwidth}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Bigger Radials}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Increased Gatewidth}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Spatial and Modelling Errors}
-\end{frame}
-
-%\section{Conclusion}
+%\subsection{Spatial Sampling Errors}
 %\begin{frame}
-%  \frametitle{Thanks and Questions}
-%  Thanks to:
-%  \begin{description}[Matplotlib]
-%    \item[Python]{http://www.python.org}
-%    \item[NumPy]{http://numpy.scipy.org}
-%    \item[SciPy]{http://www.scipy.org}
-%    \item[Matplotlib]{http://matplotlib.sourceforge.net}
-%  \end{description}
-%  Questions?
+%	\frametitle{Experimental Configuration}
 %\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Base Configuration}
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Sidelobes}
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Increased Beamwidth}
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Bigger Radials}
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Increased Gatewidth}
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Spatial and Modelling Errors}
+%\end{frame}
+
+\begin{frame}
+	\frametitle{Conclusions}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Thanks}
+	
+	\begin{center}
+		\large{Questions?}
+	\end{center}
+\end{frame}
 
 \end{document}
