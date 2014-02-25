@@ -49,11 +49,17 @@ for lam_text, exp_text in [('C', 'Control'), ('X', 'Control')]:
         for desc,moms in [('Single', (datatypes.Reflectivity, datatypes.DopplerVelocity, datatypes.SpectrumWidth)),
                           ('Dual', (datatypes.ZDR, datatypes.RhoHV, datatypes.PhiDP)),
                           ('Attenuation', (datatypes.Attenuation, datatypes.DiffAtten))]:
-            moments = [data.fields.grab(moment, pol='H', source='ts') for moment in moms] 
+            source = 'calc' if desc=='Attenuation' else 'ts'
+            moments = [data.fields.grab(moment, pol='H', source=source) for moment in moms] 
 
             fig = plt.figure(figsize=(11, 6), dpi=200)
+            if len(moments) == 3:
+                rect = [0.07, 0.05, 0.88, 0.95]
+            else:
+                rect = [0.07, 0.05, 0.88, 0.82]
+
             grid = defaults.multipanel_cbar_each(fig, (1, len(moments)), moments, data,
-                                                 rect=[0.07, 0.05, 0.88, 0.95])
+                                                 rect=rect)
             for ax in grid:
                 ax.title.set_verticalalignment('bottom')
             text = '%s-Band %s' % (lam_text, desc)
