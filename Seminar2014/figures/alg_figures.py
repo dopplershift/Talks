@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 import numpy as np
 import quantities as pq
 plt.rcParams['savefig.dpi'] = 107
@@ -106,6 +107,7 @@ def exp_order(mom):
 # <codecell>
 
 for lam_text in wavelengths:
+    continue
     for exp in exps:
         data = data_cache[lam_text, exp]
         with datatypes.PlotInfoContext(wavelength=data.wavelength):
@@ -114,21 +116,15 @@ for lam_text in wavelengths:
                                 (None, datatypes.DiffAtten), (None, datatypes.SpecDiffAtten)]:
                     fig = plt.figure(figsize=(8, 6))
                     moments = data.fields.grabAll(mom, filt=lambda f: f.pol==pol and f.source not in ('average', 'ts'))
+                    moments = sorted(moments, key=exp_order)
                     grid = defaults.multipanel_cbar_row(fig, (1, len(moments)), moments, data,
-                                                        rect=[0.07, 0.17, 0.95, 0.91])
-                    for ax,m in zip(grid, sorted(moments, key=exp_order)):
+                                                        rect=[0.07, 0.10, 0.91, 0.91])
+                    for ax,m in zip(grid, moments):
                         src = m.source
                         l = ax.set_title('Truth' if src == 'calc' else src)
                         l.set_verticalalignment('bottom')
-                    fig.suptitle(exp, fontsize=18)
+                    fig.suptitle('%s - %s' % (exp, mom.name), fontsize=18)
                     fig.savefig('%s_%s_%s.png' % (lam_text, exp, mom.name.replace(' ', '_')))
-
-import sys;sys.exit()
-# <headingcell level=2>
-
-# Algorithm Difference Between Runs
-
-# <codecell>
 
 def calc_differences_algs(data, dt=datatypes.Attenuation, pol='H'):
     destMap = {datatypes.Attenuation:AttenDelta, datatypes.DiffAtten:DiffAttenDelta,
@@ -139,92 +135,63 @@ def calc_differences_algs(data, dt=datatypes.Attenuation, pol='H'):
     for f in fields:
         data.addField(data.fields[f] - ref_field, destMap[dt], pol=f.pol, source=f.source)
 
-# <codecell>
-
 for d in data_cache.values():
     calc_differences_algs(d, dt=datatypes.Attenuation, pol='H')
     calc_differences_algs(d, dt=datatypes.SpecAttenuation, pol='H')
     calc_differences_algs(d, dt=datatypes.DiffAtten, pol=None)
     calc_differences_algs(d, dt=datatypes.SpecDiffAtten, pol=None)
 
-# <codecell>
-
-def plot_differences_algs(data, dt, pol):
-    rect=[0, 0, 1, 0.92]
-    ncols = len(data)
-
-    data_list = list()
-    moments = list()
-    for d in data:
-        moms = d.fields.grabAll(dt, filt=lambda f: f.pol == pol and f.source not in ('calc', 'average', 'ts', 'sweep'))
-        moments.extend(moms)
-        data_list.extend([d]*len(moms))
-
-    nrows = len(moms)
-    fig = plt.figure(figsize=(8, 6))
-
-    with defaults.colorbarLabeller(defaults.algLabels):
-        grid = defaults.multipanel_cbar_row(fig, (nrows, ncols), moments, data_list, rect=rect)
-    return fig, grid    
-
-# <codecell>
+for lam_text in wavelengths:
+    continue
+    for exp in exps:
+        data = data_cache[lam_text, exp]
+        with datatypes.PlotInfoContext(wavelength=data.wavelength):
+            with defaults.colorbarLabeller(algLabelsNoSrc):
+                for pol,mom in [('H', AttenDelta), ('H', SpecAttenDelta),
+                                (None, DiffAttenDelta), (None, SpecDiffAttenDelta)]:
+                    fig = plt.figure(figsize=(8, 6))
+                    moments = data.fields.grabAll(mom, filt=lambda f: f.pol==pol and f.source not in ('average', 'ts'))
+                    moments = sorted(moments, key=exp_order)
+                    grid = defaults.multipanel_cbar_row(fig, (1, len(moments)), moments, data,
+                                                        rect=[0.07, 0.05, 0.91, 0.85])
+                    for ax,m in zip(grid, moments):
+                        l = ax.set_title(m.source)
+                        l.set_verticalalignment('bottom')
+                    fig.suptitle('%s - %s' % (exp, mom.name), fontsize=18)
+                    fig.savefig('%s_%s_%s.png' % (lam_text, exp, mom.name.replace(' ', '_')))
 
 for lam_text in wavelengths:
-    data_list = data_cache.query(band=lam_text)
-    with datatypes.PlotInfoContext(wavelength=data_list[0].wavelength):
-        for pol,mom in [('H', AttenDelta), ('H', SpecAttenDelta),
-                        (None, DiffAttenDelta), (None, SpecDiffAttenDelta)]:
-            fig, grid = plot_differences_algs(data_list, mom, pol=pol)
-            polStr = 'Diff' if pol is None else pol
-            title = fig.suptitle('%s-band %s' % (lam_text, polStr), fontsize=11)
-            for ind,exp in enumerate(exps):
-                grid.axes_row[0][ind].set_title(exp)
+    for exp in exps:
+        data = data_cache[lam_text, exp]
+        with datatypes.PlotInfoContext(wavelength=data.wavelength):
+            with defaults.colorbarLabeller(algLabelsNoSrc):
+                for pol,mom in [('H', datatypes.SpecAttenuation), (None, datatypes.SpecDiffAtten)]:
+                    ref_mom = data.fields.grab(mom, pol=pol, source='calc')
+                    ref_field = data.fields[ref_mom]
+                    moments = data.fields.grabAll(mom,
+                            filt=lambda f: f.pol == pol and f.source not in ('calc', 'average', 'ts', 'sweep'))
+                    moments = sorted(moments, key=exp_order)
 
-# <codecell>
+                    fig, axes = plt.subplots(1, len(moments), sharex=True, sharey=True, figsize=(10,4))
+                    fig.subplots_adjust(top=0.8, bottom=0.05)
+                    for ind, (m, ax) in enumerate(zip(moments, axes)):
+                        alg_field = data.fields[m]
+                        mask = (ref_field > 0.02) & (alg_field > 0.02)
+                        norm = datatypes.TypePlotInfo[ref_mom.type]['norm']
+                        hist, xedge, yedge = np.histogram2d(ref_field[mask], alg_field[mask], bins=50,
+                                range=[[norm.vmin, norm.vmax], [norm.vmin, norm.vmax]])
+                        ax.pcolormesh(xedge, yedge, hist.T, norm=LogNorm())
+                        ax.plot([0.0, 1.0], [0.0, 1.0], 'k--', transform=ax.transAxes)
+                        ax.grid(True)
+                        l = ax.set_title(m.source)
+                        l.set_verticalalignment('bottom')
+                        if ind == 0:
+                            ax.set_ylabel(mom.name)
 
-def plot_scatter_algs(data, dt, pol):
-    from matplotlib.colors import LogNorm
-    data_list = list()
-    moments = list()
+                    axes[0].set_xlim(0.0, None)
+                    axes[0].set_ylim(0.0, None)
+                    axes[0].xaxis.set_major_locator(plt.MaxNLocator(nbins=5))
+                    axes[0].yaxis.set_major_locator(plt.MaxNLocator(nbins=5))
 
-    # Assume all data have the same available moments
-    moms = [f.source for f in data[0].fields.grabAll(dt,
-            filt=lambda f: f.pol == pol and f.source not in ('calc', 'average', 'ts', 'sweep'))]
-    
-    fig, axes = plt.subplots(len(moms), len(data), sharex=True, sharey=True)
-    for rowInd, (mom, row) in enumerate(zip(moms, axes)):
-        for colInd, (d, ax) in enumerate(zip(data, row)):
-            ref_mom = d.fields.grab(dt, pol=pol, source='calc')
-            ref_field = d.fields[ref_mom]
-            alg_field = d.fields.grabData(dt, pol=pol, source=mom)
-            mask = (ref_field > 0.02) & (alg_field > 0.02)
-            with datatypes.PlotInfoContext(wavelength=d.wavelength):
-                norm = datatypes.TypePlotInfo[ref_mom.type]['norm']
-            hist, xedge, yedge = np.histogram2d(ref_field[mask], alg_field[mask], bins=50,
-                    range=[[norm.vmin, norm.vmax], [norm.vmin, norm.vmax]])
-            ax.pcolormesh(xedge, yedge, hist.T, norm=LogNorm())
-            ax.plot([0.0, 1.0], [0.0, 1.0], 'k--', transform=ax.transAxes)
-            ax.grid(True)
-            if colInd == 0:
-                ax.set_ylabel(mom)
-            if rowInd == len(moms) - 1:
-                ax.set_xlabel(ref_mom)
-    ax.set_xlim(0.0, None)
-    ax.set_ylim(0.0, None)
-    ax.xaxis.set_major_locator(plt.MaxNLocator(nbins=5))
-    ax.yaxis.set_major_locator(plt.MaxNLocator(nbins=5))
-    return fig, axes    
-
-# <codecell>
-
-for lam_text in wavelengths:
-    data_list = data_cache.query(band=lam_text)
-    with datatypes.PlotInfoContext(wavelength=data_list[0].wavelength):
-        for pol,mom in [('H', datatypes.SpecAttenuation), (None, datatypes.SpecDiffAtten)]:
-            fig, grid = plot_scatter_algs(data_list, mom, pol=pol)
-            polStr = 'Diff' if pol is None else pol
-            title = fig.suptitle('%s-band %s' % (lam_text, polStr), fontsize=11)
-            for ind,exp in enumerate(exps):
-                grid[0, ind].set_title(exp)
-            fig.tight_layout()
-
+                    fig.suptitle('%s - %s' % (exp, mom.name), fontsize=18)
+                    fig.savefig('%s_%s_%s_scatter.png' % (lam_text, exp, mom.name.replace(' ', '_')))
