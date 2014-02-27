@@ -37,7 +37,7 @@
 
 \section{Motivation}
 \stepcounter{subsection}
-\begin{frame}
+\begin{frame}[<+->]
 	\frametitle{Attenuating Systems}
 	\begin{itemize}
 		\item Proliferation of systems at attenuating wavelengths (C and X bands)
@@ -49,7 +49,7 @@
 
 \begin{frame}
 	\frametitle{Applications}
-	\begin{itemize}
+	\begin{itemize}[<+->]
 		\item Any quantitative use of the data necessitates correction for attenuation
 		\item QPE
 		\item Hydrometeor Classification
@@ -59,9 +59,9 @@
 
 \begin{frame}
 	\frametitle{Attenuation Correction}
-	\begin{itemize}
+	\begin{itemize}[<+->]
 		\item Many different algorithms in the literature
-		\item Ones examined here
+		\item Ones examined here:
 		\begin{itemize}
 			\item Linear $\Phi_{DP}$
 			\item ZPHI
@@ -73,7 +73,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[<+->]
 	\frametitle{Testing Corrections}
 	\begin{itemize}	
 		\item Testing of these techniques usually rely upon comparison with
@@ -89,23 +89,23 @@
 \stepcounter{subsection}
 \begin{frame}
   \frametitle{Simulator}
-  \begin{itemize}
+  \begin{itemize}[<+->]
   	\item Model provides needed environmental information
-  	\only<2>{ \begin{itemize}
-  		\item Hydrometeor content
-  		\item Wind components
-  		\item Thermodynamic information
-  		\end{itemize} }
+  	\only<1>{\begin{itemize}
+  		\item<1> Hydrometeor content
+  		\item<1> Wind components
+  		\item<1> Thermodynamic information
+  		\end{itemize}}
   	\item Propagate discretized radar pulse through simulation grid
-  	\item During propagation, accumulate phase shift and attenuation
   	\item Calculate scattering parameters from hydrometeor information and temperature
+  	\item During propagation, accumulate phase shift and attenuation
   	\item Use scattering together with radar equation to synthesize radar signal
   	\item Includes antenna pattern (with optional sidelobes), range weighting, and noise
   	\item Also calculate some volume integrated quantities (e.g. attenuation)
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[<+->]
 	\frametitle{Signal Synthesis}
 	\begin{itemize}
 		\item Each pulse element gets assigned values from the model grid using nearest
@@ -144,7 +144,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[<+->]
 	\frametitle{Microphysics}
 	\begin{itemize}
 		\item Native model microphysics scheme is two-moment (Ziegler 1985)
@@ -229,7 +229,7 @@
 	\end{center}
 \end{frame}
 
-\section{Correction Algorithms}
+\section{Algorithms}
 \stepcounter{subsection}
 \begin{frame}
 	\frametitle{Linear $\Phi_{DP}$}
@@ -274,7 +274,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[<+->]
 	\frametitle{Coefficient Regression}
 	\begin{itemize}
 		\item Need to determine own set of coefficients for algorithms
@@ -364,13 +364,19 @@
 
 \begin{frame}
 	\begin{center}
-		\includegraphics[scale=0.45]{figures/C_Control_Specific_Attenuation_Difference.png}
+		\includegraphics[scale=0.45]{figures/C_Control_Specific_Attenuation_scatter.png}
 	\end{center}
 \end{frame}
 
 \begin{frame}
 	\begin{center}
-		\includegraphics[scale=0.45]{figures/C_Control_Specific_Attenuation_scatter.png}
+		\includegraphics[scale=0.45]{figures/C_Control_Differential_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Control_Specific_Differential_Attenuation_scatter.png}
 	\end{center}
 \end{frame}
 
@@ -395,7 +401,31 @@
 
 \begin{frame}
 	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Wavelength_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
 		\includegraphics[scale=0.55]{figures/C_Wavelength_Specific_Attenuation.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Wavelength_Specific_Attenuation_scatter.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Wavelength_Differential_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Wavelength_Specific_Differential_Attenuation_scatter.png}
 	\end{center}
 \end{frame}
 
@@ -420,7 +450,31 @@
 
 \begin{frame}
 	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Temperature_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
 		\includegraphics[scale=0.55]{figures/C_Temperature_Specific_Attenuation.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Temperature_Specific_Attenuation_scatter.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Temperature_Differential_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Temperature_Specific_Differential_Attenuation_scatter.png}
 	\end{center}
 \end{frame}
 
@@ -445,7 +499,31 @@
 
 \begin{frame}
 	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Shape_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
 		\includegraphics[scale=0.55]{figures/C_Shape_Specific_Attenuation.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Shape_Specific_Attenuation_scatter.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Shape_Differential_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Shape_Specific_Differential_Attenuation_scatter.png}
 	\end{center}
 \end{frame}
 
@@ -470,12 +548,47 @@
 
 \begin{frame}
 	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Combined_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
 		\includegraphics[scale=0.55]{figures/C_Combined_Specific_Attenuation.png}
 	\end{center}
 \end{frame}
 
 \begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Combined_Specific_Attenuation_scatter.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Combined_Differential_Attenuation_Difference.png}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		\includegraphics[scale=0.45]{figures/C_Combined_Specific_Differential_Attenuation_scatter.png}
+	\end{center}
+\end{frame}
+
+\section{Conclusion}
+\stepcounter{subsection}
+\begin{frame}[<+->]
 	\frametitle{Conclusions}
+	\begin{itemize}
+		\item The performance of the linear $\Phi_{DP}$ and ZPHI algorithms depend heavily upon having coefficients
+		that reflect the true scattering physics
+		\item The self-consistent version of ZPHI performs well overall at removing biases due to changing physics; however this comes
+		at a cost of some rays that have increased error
+		\item Correction for differential attenuation performs worse across all the algorithms, at least relative to the expected $Z_{DR}$ values
+		\item For linear $\Phi_{DP}$ and ZPHI, simply using coefficients to the wave-band of interest can cause non-negligible error
+		\item Combining multiple invalid assumptions can actually reduce errors since the biases offset each other
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -484,7 +597,7 @@
 		\item Dr. Ted Mansell for performing the model simulation
 		\item The NumPy, SciPy, and Matplotlib Python projects that makes this possible
 		\item All of my officemates over the years
-		\item Dr. Mike Biggerstaff for putting up with me all these years
+		\item Dr. Mike Biggerstaff, my advisor, for putting up with me all these years
 	\end{itemize}
 	\begin{center}
 		\large{Questions?}
