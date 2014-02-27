@@ -173,7 +173,7 @@ for lam_text in wavelengths:
                     moments = sorted(moments, key=exp_order)
 
                     fig, axes = plt.subplots(1, len(moments), sharex=True, sharey=True, figsize=(10,4))
-                    fig.subplots_adjust(top=0.8, bottom=0.05)
+                    fig.subplots_adjust(left=0.07, top=0.8, bottom=0.12)
                     for ind, (m, ax) in enumerate(zip(moments, axes)):
                         alg_field = data.fields[m]
                         mask = (ref_field > 0.02) & (alg_field > 0.02)
@@ -187,6 +187,7 @@ for lam_text in wavelengths:
                         l.set_verticalalignment('bottom')
                         if ind == 0:
                             ax.set_ylabel(mom.name)
+                        ax.set_xlabel('True ' + mom.abbr)
 
                     axes[0].set_xlim(0.0, None)
                     axes[0].set_ylim(0.0, None)
