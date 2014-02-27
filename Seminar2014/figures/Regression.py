@@ -109,6 +109,7 @@ def fit_plot(x_vars, y_fit, y_truth, ylabel):
     xvar,xlabel = x_vars[0]
     fig,(ax, ax2) = plt.subplots(1, 2, sharey=False, squeeze=True)
     fig.set_size_inches(10, 6)
+    fig.subplots_adjust(wspace=0.3)
 
     ax.plot(xvar, y_truth, 'ro', linestyle='none', alpha=0.1, label='Raw Calculation')
     ax.plot(xvar, y_fit, 'bs', linestyle='none', alpha=0.1, label='Fit')
@@ -116,7 +117,7 @@ def fit_plot(x_vars, y_fit, y_truth, ylabel):
     ax.legend(loc='upper left')
     ax.set_xlabel(xlabel + '(%s)' % xvar.dimensionality.latex)
     ax.set_ylabel(ylabel)
-    fig.tight_layout()
+    #fig.tight_layout()
 
     ax2.plot(y_truth, y_fit - y_truth, 'bo', linestyle='none', alpha=0.1)
     ax2.grid()
@@ -152,11 +153,11 @@ scatter_vars = [(disser.units.to_dBz(z * disser.units.zUnit), r'$Z_H$')]
 coeffs,fit = power_law_fit(z.reshape(-1, 1), atten)
 fig,ax = fit_plot(scatter_vars, fit, atten, r'$A_H$')
 
-plt.savefig("basic_power_law.png")
+plt.savefig("basic_power_law.png", dpi=200)
 # <codecell>
 
 weights = (atten * atten).reshape(-1, 1)
 coeffs,fit = power_law_fit(z.reshape(-1, 1), atten, weights)
 fig,ax = fit_plot(scatter_vars, fit, atten, r'$A_H$')
 
-plt.savefig("weighted_power_law.png")
+plt.savefig("weighted_power_law.png", dpi=200)
