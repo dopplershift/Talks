@@ -125,6 +125,7 @@ for lam_text in wavelengths:
                         l.set_verticalalignment('bottom')
                     fig.suptitle('%s - %s' % (exp, mom.name), fontsize=18)
                     fig.savefig('%s_%s_%s.png' % (lam_text, exp, mom.name.replace(' ', '_')))
+                    plt.close(fig)
 
 def calc_differences_algs(data, dt=datatypes.Attenuation, pol='H'):
     destMap = {datatypes.Attenuation:AttenDelta, datatypes.DiffAtten:DiffAttenDelta,
@@ -142,7 +143,6 @@ for d in data_cache.values():
     calc_differences_algs(d, dt=datatypes.SpecDiffAtten, pol=None)
 
 for lam_text in wavelengths:
-    continue
     for exp in exps:
         data = data_cache[lam_text, exp]
         with datatypes.PlotInfoContext(wavelength=data.wavelength):
@@ -159,6 +159,7 @@ for lam_text in wavelengths:
                         l.set_verticalalignment('bottom')
                     fig.suptitle('%s - %s' % (exp, mom.name), fontsize=18)
                     fig.savefig('%s_%s_%s.png' % (lam_text, exp, mom.name.replace(' ', '_')))
+                    plt.close(fig)
 
 for lam_text in wavelengths:
     for exp in exps:
@@ -196,3 +197,4 @@ for lam_text in wavelengths:
 
                     fig.suptitle('%s - %s' % (exp, mom.name), fontsize=18)
                     fig.savefig('%s_%s_%s_scatter.png' % (lam_text, exp, mom.name.replace(' ', '_')))
+                    plt.close(fig)
