@@ -90,14 +90,14 @@
 \begin{frame}
   \frametitle{Simulator}
   \begin{itemize}[<+->]
-  	\item Model provides needed environmental information
+  	\item Numerical cloud model output provides needed environmental information
   	\only<1>{\begin{itemize}
   		\item<1> Hydrometeor content
   		\item<1> Wind components
   		\item<1> Thermodynamic information
   		\end{itemize}}
   	\item Propagate discretized radar pulse through simulation grid
-  	\item Calculate scattering parameters from hydrometeor information and temperature
+  	\item Calculate scattering parameters from hydrometeor information and (optionally) temperature
   	\item During propagation, accumulate phase shift and attenuation
   	\item Use scattering together with radar equation to synthesize radar signal
   	\item Includes antenna pattern (with optional sidelobes), range weighting, and noise
@@ -110,13 +110,12 @@
 	\begin{itemize}
 		\item Each pulse element gets assigned values from the model grid using nearest
 		neighbor sampling
-		\item Start each element with uniformly distributed random phases
+		\item Start each element with uniformly distributed random phase
 		\item Each element functions as "scattering center" that generates
-		a phase shift (Muschinski 1999)
+		a phase shift based on the PRT (Muschinski 1999)
 		\item Power at each element is exponentially distributed with expected value
-		given from scattering 
-		\item Correlation between polarizations uses scattering calculation
-		to adjust randomness between polarizations (Galati 1995)
+		given from radar equation
+		\item Correlation between polarizations uses theoretical $\rho_{HV}$ from scattering calculation (Galati 1995)
 		\item Each polarization is attenuated and phase-shifted separately
 		\item Altogether, this gives complex, random values for each pulse element for 
 		each polarization
@@ -151,7 +150,7 @@
 		\item Model distribution is a gamma distribution for volume of drops
 		\item However this distribution is not well-suited to radar
 		\item Use modified gamma distribution on diameter ($\mu=1.8102$)
-		\item This uses the model's number concentration and liquid water content
+		\item This uses the model's number concentration $<D^0>$ and liquid water content $<D^3>$
 		\item Also conserves model's $D^6$ (or $V^2$)
 	\end{itemize}
 \end{frame}
