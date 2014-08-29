@@ -1,0 +1,14 @@
+*.aux
+*.bbl
+*.blg
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.toc
+*.vrb
+*.synctex.gz
+*.swp
+ref_runs/
+spatial_runs/
