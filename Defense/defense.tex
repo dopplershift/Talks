@@ -18,6 +18,7 @@
 %\usetheme{Ilmenau}
 %\usetheme{Madrid}
 %\usetheme{Warsaw}
+\beamertemplatenavigationsymbolsempty
 
 \title{Estimating and Mitigating Errors in Dual-Polarization Radar Attenuation Correction}
 \author{Ryan May}
@@ -379,6 +380,7 @@
 	\end{center}
 \end{frame}
 
+\subsubsection{Control}
 \begin{frame}
 	\frametitle{Control: Matched Assumptions}
 	\begin{center}
@@ -386,7 +388,7 @@
 	        \hline
 	        Temperature & \SI{283}{\kelvin} \\
 	        Drop Shape Model & Brandes \\
-	        Wavelength & \SI{5.5}{\centi\meter} \\
+	        Wavelength & \SI{5.5}{\centi\meter}, \SI{3.21}{\centi\meter} \\
 			\hline
 	    \end{tabular}
 	\end{center}	
@@ -464,88 +466,18 @@
     \end{center}
 \end{frame}
 
+\subsubsection{Shape}
 \begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/C_Canting_Attenuation_H}
-        \includegraphics<2>[scale=0.7]{figures/C_Control_Attenuation_H}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/C_Canting_Attenuation_Difference_H}
-        \includegraphics<2>[scale=0.7]{figures/C_Control_Attenuation_Difference_H}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/C_Canting_Specific_Attenuation_H_scatter}
-        \includegraphics<2>[scale=0.7]{figures/C_Control_Specific_Attenuation_H_scatter}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/C_Canting_Differential_Attenuation}
-        \includegraphics<2>[scale=0.7]{figures/C_Control_Differential_Attenuation}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/C_Canting_Differential_Attenuation_Difference}
-        \includegraphics<2>[scale=0.7]{figures/C_Control_Differential_Attenuation_Difference}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/C_Canting_Specific_Differential_Attenuation_scatter}
-        \includegraphics<2>[scale=0.7]{figures/C_Control_Specific_Differential_Attenuation_scatter}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/X_Canting_Attenuation_H}
-        \includegraphics<2>[scale=0.7]{figures/X_Control_Attenuation_H}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/X_Canting_Attenuation_Difference_H}
-        \includegraphics<2>[scale=0.7]{figures/X_Control_Attenuation_Difference_H}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/X_Canting_Specific_Attenuation_H_scatter}
-        \includegraphics<2>[scale=0.7]{figures/X_Control_Specific_Attenuation_H_scatter}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/X_Canting_Differential_Attenuation}
-        \includegraphics<2>[scale=0.7]{figures/X_Control_Differential_Attenuation}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/X_Canting_Differential_Attenuation_Difference}
-        \includegraphics<2>[scale=0.7]{figures/X_Control_Differential_Attenuation_Difference}
-    \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \includegraphics<1>[scale=0.7]{figures/X_Canting_Specific_Differential_Attenuation_scatter}
-        \includegraphics<2>[scale=0.7]{figures/X_Control_Specific_Differential_Attenuation_scatter}
-    \end{center}
+	\frametitle{Shape}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Temperature & \SI{283}{\kelvin} \\
+	        Drop Shape Model & Pruppacher \\
+	        Wavelength & \SI{5.5}{\centi\meter}, \SI{3.21}{\centi\meter} \\
+			\hline
+	    \end{tabular}
+	\end{center}	
 \end{frame}
 
 \begin{frame}
@@ -632,6 +564,20 @@
     \end{center}
 \end{frame}
 
+\subsubsection{Temperature}
+\begin{frame}
+	\frametitle{Temperature}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Temperature & \SI{\~295}{\kelvin} \\
+	        Drop Shape Model & Brandes \\
+	        Wavelength & \SI{5.5}{\centi\meter}, \SI{3.21}{\centi\meter} \\
+			\hline
+	    \end{tabular}
+	\end{center}	
+\end{frame}
+
 \begin{frame}
     \begin{center}
         \includegraphics<1>[scale=0.7]{figures/C_Temperature_Attenuation_H}
@@ -716,6 +662,19 @@
     \end{center}
 \end{frame}
 
+\subsubsection{Wavelength}
+\begin{frame}
+	\frametitle{Control: Matched Assumptions}
+	\begin{center}
+	    \begin{tabular}{ | l | l | }
+	        \hline
+	        Temperature & \SI{283}{\kelvin} \\
+	        Drop Shape Model & Brandes \\
+	        Wavelength & \SI{5.0}{\centi\meter}, \SI{3.0}{\centi\meter} \\
+			\hline
+	    \end{tabular}
+	\end{center}	
+\end{frame}
 \begin{frame}
     \begin{center}
         \includegraphics<1>[scale=0.7]{figures/C_Wavelength_Attenuation_H}
@@ -801,6 +760,260 @@
 \end{frame}
 
 \subsection{Spatial Errors}
+\subsubsection{Radial Width}
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\subsubsection{Range Resolution}
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\subsubsection{Combined}
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
 
 \section{Conclusion}
 \stepcounter{subsection}
@@ -830,13 +1043,100 @@
 	\end{center}
 \end{frame}
 
-\section{backup}
+\section{Backup}
 \begin{frame}
 	\begin{center}
 		Backup Slides
 	\end{center}
 \end{frame}
 
+\subsection{Model Errors}
+\subsubsection{Canting}
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/C_Canting_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/C_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/C_Canting_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/C_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/C_Canting_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/C_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/C_Canting_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/C_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/C_Canting_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/C_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/C_Canting_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/C_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/X_Canting_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/X_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/X_Canting_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/X_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/X_Canting_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/X_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/X_Canting_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/X_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/X_Canting_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/X_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/X_Canting_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/X_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\subsubsection{Combined}
 \begin{frame}
 	\frametitle{Worst Case}
 	\begin{center}
@@ -934,7 +1234,7 @@
     \end{center}
 \end{frame}
 
-\subsection{Vertical Channel}
+\subsubsection{Vertical Channel}
 \begin{frame}
     \begin{center}
         \includegraphics[scale=0.7]{figures/C_Control_Attenuation_V}
@@ -1178,6 +1478,497 @@
     \begin{center}
         \includegraphics<1>[scale=0.7]{figures/X_Combined_Specific_Attenuation_V_scatter}
         \includegraphics<2>[scale=0.7]{figures/X_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\subsection{Spatial Errors}
+\subsubsection{Control}
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\subsubsection{Sidelobe}
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\subsubsection{Beamwidth}
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Attenuation_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Attenuation_Difference_H}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_H}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Specific_Attenuation_H_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_H_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Differential_Attenuation}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Differential_Attenuation_Difference}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Differential_Attenuation_Difference}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Specific_Differential_Attenuation_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Differential_Attenuation_scatter}
+    \end{center}
+\end{frame}
+
+\subsubsection{Vertical Channel}
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Sidelobe_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Sidelobe_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Beamwidth_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Beamwidth_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RadialWidth_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RadialWidth_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_RangeResolution_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_RangeResolution_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/C_Combined_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/C_Control_Specific_Attenuation_V_scatter}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Attenuation_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Attenuation_Difference_V}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Attenuation_Difference_V}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \includegraphics<1>[scale=0.7]{figures/spatial/X_Combined_Specific_Attenuation_V_scatter}
+        \includegraphics<2>[scale=0.7]{figures/spatial/X_Control_Specific_Attenuation_V_scatter}
     \end{center}
 \end{frame}
 
