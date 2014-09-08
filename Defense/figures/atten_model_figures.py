@@ -10,67 +10,7 @@ import disser.plots.defaults as defaults
 from disser.plots.basic import LabelGenerator
 from disser import plots, datatypes, atten
 
-class StatsFile(object):
-    class Table(object):
-        def __init__(self, fp, exp, lam):
-            self.fp = fp
-            self.exp = exp
-            self.lam = lam
-            self.pol = None
-
-        def __enter__(self):
-            self.start_table()
-            return self
-
-        def __exit__(self, type, value, traceback):
-            self.end_table()
-
-        def write_stats(self, pol, alg, bias, mse, r_sq):
-            if pol is None:
-                pol = 'Differential'
-            elif pol == 'H':
-                pol = 'Horizontal'
-            else:
-                pol = 'Vertical'
-            self.write_pol(pol)
-            self.fp.write('        %s & %.4f & %.4f & %.4f\\\\\n' % (alg, bias, mse, r_sq))
-
-        def write_pol(self, pol):
-            if pol == self.pol:
-                return
-            self.pol = pol
-            self.fp.write('        \\hline\n')
-            self.fp.write('        \\multicolumn{4}{|c|}{%s}\\\\\n' % pol)
-            self.fp.write('        \\hline\n')
-
-        def start_table(self):
-            self.fp.write(r'''\begin{table}
-    \centering
-    \begin{tabular}{| c | c | c | c |}
-        \hline
-        Algorithm & Bias (\si{dB\per \kilo\meter}) & MSE (\si{dB\squared \per \kilo\meter \squared}) & $r^2$ \\
-        \hline
-''')
-
-        def end_table(self):
-            if self.exp == 'Control':
-                caption = '''    \\caption{{Bias, mean squared-error, and $r^2$ for the specific attenuation
-    results for the {exp} experiment at {lam}-band.}}'''
-            else:
-                caption = '''    \\caption{{As in Table~\\ref{{tab:{lam}-stats-Control}}, but for
-    the {exp} experiment.}}'''
-            self.fp.write(('''\\hline
-    \\end{{tabular}}
-''' + caption + '''
-    \\label{{tab:{lam}-stats-{exp}}}
-\\end{{table}}
-''').format(exp=self.exp, lam=self.lam))
-
-    def __init__(self, fname):
-        self.fp = open(fname, 'w')
-
-    def table(self, lam, exp):
-        return self.Table(self.fp, exp, lam)
+stats = dict()
 
 def setupDefaults(grid):
     ax = grid[0]
@@ -160,10 +100,10 @@ def make_figs(data_cache, out_dir='.'):
 
     limits = {('C', 'H'):2.0, ('C', 'V'):2.0, ('C', None):0.75,
             ('X', 'H'):8.0, ('X', 'V'):8.0, ('X', None):1.0}
-    stats = StatsFile(os.path.join(out_dir, 'spec_atten_stats.tex'))
+    #stats = StatsFile(os.path.join(out_dir, 'spec_atten_stats.tex'))
     for lam_text in wavelengths:
         for exp in exps:
-            with stats.table(lam_text, exp) as tab:
+            #with stats.table(lam_text, exp) as tab:
                 data = data_cache[lam_text, exp]
                 with datatypes.PlotInfoContext(wavelength=data.wavelength):
                     with defaults.colorbarLabeller(algLabelsNoSrc):
@@ -202,8 +142,7 @@ def make_figs(data_cache, out_dir='.'):
                                     ax.set_ylabel(mom_abbr)
                                 ax.set_xlabel('True ' + mom_abbr)
 
-                                tab.write_stats(pol, m.source,
-                                        *regress_stats(ref_field[mask], alg_field[mask]))
+                                stats[lam_text, exp, pol, m.source] = regress_stats(ref_field[mask], alg_field[mask])
 
                             axes[0,0].set_xlim(0.0, xlim)
                             axes[0,0].set_ylim(0.0, xlim)
@@ -218,6 +157,32 @@ def make_figs(data_cache, out_dir='.'):
 
                             fig.savefig(os.path.join(out_dir, fname), bbox_inches='tight')
                             plt.close(fig)
+
+    names = ['Bias', 'MSE', '$r^2$']
+    with open('spec_atten_stats.tex', 'w') as fp:
+        for lam_text in wavelengths:
+            for pol,abbr in [('Horizontal','H'), ('Vertical', 'V'), ('Differential', None)]:
+                for ind,name in enumerate(names):
+                    fp.write('''\\begin{{frame}}
+    \\frametitle{{Summary: {name} at {lam}-band for {pol} Polarization}}
+    \\begin{{center}}
+        \\begin{{tabular}}{{| c | c | c | c | c |}}
+            \\hline
+            Experiment & Linear & ZPHI & SC & MSC \\\\
+            \\hline
+            \\hline\n'''.format(name=name, lam=lam_text, pol=pol))
+                    for exp in exps:
+                        fp.write('            %s & %.4f & %.4f & %.4f & %.4f \\\\\n'%(exp,
+                            stats[lam_text, exp, abbr, 'Linear'][ind],
+                            stats[lam_text, exp, abbr, 'ZPHI'][ind],
+                            stats[lam_text, exp, abbr, 'SC'][ind],
+                            stats[lam_text, exp, abbr, 'MSC'][ind]))
+                    fp.write(r'''            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+''')
 
 if __name__ == '__main__':
     data_cache = load_model_experiments('ref_runs/')
